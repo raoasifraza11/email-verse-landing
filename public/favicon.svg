@@ -1,0 +1,38 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="emailverse-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#d946ef" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="45" fill="white" stroke="url(#emailverse-gradient)" stroke-width="2"/>
+  
+  <!-- Envelope Shape -->
+  <path
+    d="M20 30 L50 50 L80 30 L80 70 L20 70 Z"
+    fill="url(#emailverse-gradient)"
+    stroke="url(#emailverse-gradient)"
+    stroke-width="1.5"
+  />
+  
+  <!-- Envelope Flap -->
+  <path
+    d="M20 30 L50 50 L80 30"
+    fill="none"
+    stroke="white"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  
+  <!-- Inner Lines for Detail -->
+  <path
+    d="M28 40 L72 40 M28 48 L72 48 M28 56 L60 56"
+    stroke="rgba(255,255,255,0.7)"
+    stroke-width="1.5"
+    stroke-linecap="round"
+  />
+</svg>
