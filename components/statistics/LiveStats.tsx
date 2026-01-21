@@ -35,7 +35,7 @@ const LiveStats = () => {
     },
     {
       icon: Users,
-      label: 'Active Users',
+      label: 'Projects Delivered',
       value: stats.activeUsers.toLocaleString(),
       color: 'text-green-600',
       bgColor: 'bg-green-100',

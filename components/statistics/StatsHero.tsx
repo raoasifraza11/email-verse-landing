@@ -1,34 +1,47 @@
-import { BarChart3, TrendingUp, Users, Globe } from 'lucide-react'
+import { BarChart3, TrendingUp, Users, Globe, DollarSign, Zap } from 'lucide-react'
 
 const StatsHero = () => {
   const keyStats = [
     {
       icon: Users,
-      value: '50,000+',
-      label: 'Active Users',
+      value: '2K+',
+      label: 'Projects Delivered',
       change: '+12%',
       period: 'this month'
     },
     {
       icon: BarChart3,
-      value: '2.5B+',
-      label: 'Emails Sent',
+      value: '1B+',
+      label: 'Emails Sent Successfully',
       change: '+18%',
       period: 'this quarter'
     },
     {
       icon: TrendingUp,
-      value: '98.5%',
+      value: '99%',
       label: 'Delivery Rate',
       change: '+2.1%',
       period: 'vs industry avg'
     },
     {
       icon: Globe,
-      value: '180+',
-      label: 'Countries',
-      change: '+5',
-      period: 'new this year'
+      value: 'Worldwide',
+      label: 'Deliverability',
+      change: 'Global',
+      period: 'reach & compliance'
+    }
+  ]
+
+  const additionalStats = [
+    {
+      value: '$125M+',
+      label: 'Revenue Generated',
+      description: 'For our customers'
+    },
+    {
+      value: '5x',
+      label: 'Better ROI',
+      description: 'Compared to traditional methods'
     }
   ]
 
@@ -53,7 +66,7 @@ const StatsHero = () => {
         </div>
 
         {/* Key Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {keyStats.map((stat, index) => (
             <div key={index} className="bg-white rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300">
               <div className="bg-primary-100 p-4 rounded-full inline-block mb-6">
@@ -74,6 +87,45 @@ const StatsHero = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Additional Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300">
+            <div className="bg-orange-100 p-4 rounded-full inline-block mb-6">
+              <DollarSign className="h-8 w-8 text-orange-600" />
+            </div>
+            
+            <div className="text-3xl font-bold text-gray-900 mb-2">
+              $125M+
+            </div>
+            
+            <div className="text-lg font-semibold text-gray-700 mb-3">
+              Revenue Generated
+            </div>
+            
+            <div className="text-sm text-gray-600">
+              For our customers
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300">
+            <div className="bg-red-100 p-4 rounded-full inline-block mb-6">
+              <Zap className="h-8 w-8 text-red-600" />
+            </div>
+            
+            <div className="text-3xl font-bold text-gray-900 mb-2">
+              5x
+            </div>
+            
+            <div className="text-lg font-semibold text-gray-700 mb-3">
+              Better ROI
+            </div>
+            
+            <div className="text-sm text-gray-600">
+              Compared to traditional methods
+            </div>
+          </div>
         </div>
 
         {/* Quick Insights */}

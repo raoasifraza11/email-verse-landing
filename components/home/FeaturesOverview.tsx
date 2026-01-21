@@ -60,11 +60,11 @@ const FeaturesOverview = () => {
             Everything You Need to Succeed
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Comprehensive Platform for <span className="text-gradient">Email Success</span>
+            A Complete Email Outreach Engine, <span className="text-gradient">Run by Experts</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our comprehensive platform provides all the tools and features you need 
-            to create, send, and optimize email campaigns that drive results.
+            Email Verse is a done-for-you email outreach system. We handle infrastructure, 
+            deliverability, copy, sending, and optimization so your campaigns land in inboxes and convert into meetings.
           </p>
         </div>
 
@@ -134,12 +134,17 @@ const FeaturesOverview = () => {
             Ready to Transform Your Email Marketing?
           </h3>
           <p className="text-xl mb-8 text-primary-100">
-            Join thousands of businesses already using EmailVerse to grow their revenue.
+            Join hundreds of businesses already using EmailVerse to grow their revenue.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-primary-600 hover:bg-primary-50 hover:text-primary-700 font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-              Start Free Trial
-            </button>
+            <a 
+              href="https://calendly.com/emailverse/consultation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-primary-600 hover:bg-primary-50 hover:text-primary-700 font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 inline-block text-center"
+            >
+              Start Growing Your Leads Now
+            </a>
             <button className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5">
               View All Features
             </button>

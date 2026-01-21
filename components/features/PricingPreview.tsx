@@ -15,7 +15,7 @@ const PricingPreview = () => {
         'Basic analytics'
       ],
       popular: false,
-      cta: 'Start Free Trial'
+      cta: 'Start Growing Your Leads Now'
     },
     {
       name: 'Professional',
@@ -31,7 +31,7 @@ const PricingPreview = () => {
         'Custom templates'
       ],
       popular: true,
-      cta: 'Start Free Trial'
+      cta: 'Start Growing Your Leads Now'
     },
     {
       name: 'Enterprise',
@@ -47,7 +47,7 @@ const PricingPreview = () => {
         'SLA guarantee'
       ],
       popular: false,
-      cta: 'Contact Sales'
+      cta: 'Start Growing Your Leads Now'
     }
   ]
 
@@ -60,7 +60,7 @@ const PricingPreview = () => {
             Simple, Transparent Pricing
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose the plan that fits your needs. All plans include a 14-day free trial 
+            Choose the plan that fits your needs. All plans include a free consultation 
             and can be upgraded or downgraded at any time.
           </p>
         </div>
@@ -149,12 +149,17 @@ const PricingPreview = () => {
               Ready to Get Started?
             </h3>
             <p className="text-lg mb-6 opacity-90">
-              Try EmailVerse free for 14 days. No credit card required.
+              Get professional email marketing services and start seeing results immediately.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
-                Start Free Trial
-              </button>
+              <a 
+                href="https://calendly.com/emailverse/consultation"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-block text-center"
+              >
+                Start Growing Your Leads Now
+              </a>
               <button className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold py-3 px-8 rounded-lg transition-all duration-200">
                 View Full Pricing
               </button>

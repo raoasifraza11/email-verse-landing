@@ -12,7 +12,7 @@ export default function IntegrationsPage() {
       description: 'Sync contacts and track email engagement in your CRM',
       logo: '🏢',
       rating: 4.9,
-      installs: '50K+',
+      installs: '2K+',
       featured: true
     },
     {

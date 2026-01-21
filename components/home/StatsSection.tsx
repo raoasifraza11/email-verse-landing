@@ -31,23 +31,23 @@ const StatsSection = () => {
   const stats = [
     {
       icon: Users,
-      value: '50,000+',
-      label: 'Active Users',
-      description: 'Businesses trust EmailVerse',
+      value: '2K+',
+      label: 'Projects Delivered',
+      description: 'Successful campaigns completed',
       color: 'text-blue-600',
       bgColor: 'bg-blue-100'
     },
     {
       icon: Mail,
-      value: '2.5B+',
-      label: 'Emails Sent',
-      description: 'Messages delivered monthly',
+      value: '1B+',
+      label: 'Emails Sent Successfully',
+      description: 'Messages delivered with high success rate',
       color: 'text-green-600',
       bgColor: 'bg-green-100'
     },
     {
       icon: TrendingUp,
-      value: '98.5%',
+      value: '99%',
       label: 'Delivery Rate',
       description: 'Industry-leading deliverability',
       color: 'text-purple-600',
@@ -63,8 +63,8 @@ const StatsSection = () => {
     },
     {
       icon: Globe,
-      value: '180+',
-      label: 'Countries',
+      value: 'Worldwide',
+      label: 'Deliverability',
       description: 'Global reach and compliance',
       color: 'text-indigo-600',
       bgColor: 'bg-indigo-100'
@@ -84,7 +84,7 @@ const StatsSection = () => {
       title: 'Industry Recognition',
       items: [
         'Best Email Marketing Platform 2024',
-        'Top Rated on G2 & Capterra',
+        'Top rated on all freelancing platforms',
         'SOC 2 Type II Certified',
         'GDPR & CAN-SPAM Compliant'
       ]
@@ -153,9 +153,9 @@ const StatsSection = () => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
             <span className="text-white">Join </span>
             <span className="bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-transparent animate-pulse">
-              thousands of companies
+              hundreds of businesses
             </span>
-            <span className="text-white block mt-2">that have transformed their email marketing</span>
+            <span className="text-white block mt-2">already using EmailVerse to grow their revenue</span>
           </h2>
           
           {/* Enhanced Subtitle */}
@@ -226,11 +226,16 @@ const StatsSection = () => {
               Ready to Join These Success Stories?
             </h3>
             <p className="text-xl mb-8 text-primary-100">
-              Start your free trial today and see why businesses choose EmailVerse.
+              Get powerful email tools plus expert services to maximize your success.
             </p>
-            <button className="bg-white hover:bg-primary-50 text-primary-700 hover:text-primary-800 font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg transform hover:-translate-y-1">
-              Get Started Free
-            </button>
+            <a 
+              href="https://calendly.com/emailverse/consultation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white hover:bg-primary-50 text-primary-700 hover:text-primary-800 font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg transform hover:-translate-y-1 inline-block text-center"
+            >
+              Start Growing Your Leads Now
+            </a>
           </div>
         </div>
       </div>

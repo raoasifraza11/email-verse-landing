@@ -8,7 +8,7 @@ import EmailVerseLogo from './EmailVerseLogo'
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [showDropdown, setShowDropdown] = useState(false)
+  const [showDropdown, setShowDropdown] = useState('')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,7 +24,6 @@ const Header = () => {
       name: 'Features', 
       href: '/features',
       dropdown: [
-        { name: 'AI Automation', href: '/features#automation', icon: Zap },
         { name: 'Analytics', href: '/features#analytics', icon: Star },
         { name: 'Templates', href: '/features#templates', icon: Mail },
         { name: 'Integrations', href: '/features#integrations', icon: Shield }
@@ -36,37 +35,31 @@ const Header = () => {
 
   const trustIndicators = [
     { text: 'SOC 2 Certified', icon: Shield },
-    { text: '50K+ Users', icon: Users },
+    { text: '2K+ Projects', icon: Users },
     { text: '4.9★ Rating', icon: Star }
   ]
 
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-primary-100' 
-        : 'bg-white shadow-sm border-b border-primary-100'
+        ? 'bg-white/99 backdrop-blur-lg shadow-xl border-b border-gray-200' 
+        : 'bg-white shadow-md border-b border-gray-100'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-3 group">
+            <Link href="/" className="flex items-center group">
               <EmailVerseLogo 
-                className="h-8 w-8 group-hover:scale-105 transition-transform duration-200" 
+                className="h-10 w-auto group-hover:scale-105 transition-transform duration-200" 
                 showText={false}
               />
-              <div>
-                <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-secondary-800 bg-clip-text text-transparent">
-                  EmailVerse
-                </span>
-                <div className="text-xs text-secondary-500 -mt-1">AI-Powered</div>
-              </div>
             </Link>
           </div>
 
           {/* Desktop Navigation - Centered */}
-          <nav className="hidden md:flex items-center justify-center flex-1">
-            <div className="flex items-center space-x-10">
+          <nav className="hidden md:flex items-center justify-center flex-1 ml-12">
+            <div className="flex items-center space-x-12">
               {navigation.map((item) => (
                 <div key={item.name} className="relative">
                   {item.dropdown ? (
@@ -75,18 +68,18 @@ const Header = () => {
                       onMouseEnter={() => setShowDropdown(item.name)}
                       onMouseLeave={() => setShowDropdown('')}
                     >
-                      <button className="flex items-center space-x-1 text-secondary-600 hover:text-primary-600 font-medium transition-colors duration-200 py-2 px-1">
+                      <button className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 font-semibold transition-colors duration-200 py-3 px-2">
                         <span>{item.name}</span>
                         <ChevronDown className="h-4 w-4" />
                       </button>
                       
                       {showDropdown === item.name && (
-                        <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-primary-100 py-2 z-50">
+                        <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50">
                           {item.dropdown.map((dropItem) => (
                             <Link
                               key={dropItem.name}
                               href={dropItem.href}
-                              className="flex items-center space-x-3 px-4 py-3 text-secondary-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200"
+                              className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200"
                             >
                               <dropItem.icon className="h-5 w-5 text-primary-500" />
                               <span className="font-medium">{dropItem.name}</span>
@@ -98,7 +91,7 @@ const Header = () => {
                   ) : (
                     <Link
                       href={item.href}
-                      className="text-secondary-600 hover:text-primary-600 font-medium transition-colors duration-200 relative group py-2 px-1"
+                      className="text-gray-700 hover:text-primary-600 font-semibold transition-colors duration-200 relative group py-3 px-2"
                     >
                       {item.name}
                       <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
@@ -110,26 +103,28 @@ const Header = () => {
           </nav>
 
           {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
             <Link 
               href="/login" 
-              className="text-secondary-600 hover:text-primary-600 font-medium transition-colors duration-200"
+              className="text-gray-700 hover:text-primary-600 font-semibold transition-colors duration-200 px-4 py-2"
             >
               Sign In
             </Link>
-            <Link 
-              href="/signup" 
-              className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-semibold py-2.5 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2"
+            <a 
+              href="https://calendly.com/emailverse/consultation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2"
             >
               <Zap className="h-4 w-4" />
-              <span>Get Started Free</span>
-            </Link>
+              <span>Get Started Now</span>
+            </a>
           </div>
 
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-secondary-600 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200"
+            className="md:hidden p-3 rounded-xl text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all duration-200"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -184,14 +179,16 @@ const Header = () => {
                 >
                   Sign In
                 </Link>
-                <Link 
-                  href="/signup" 
+                <a 
+                  href="https://calendly.com/emailverse/consultation"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center space-x-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <Zap className="h-4 w-4" />
-                  <span>Get Started Free</span>
-                </Link>
+                  <span>Get Started Now</span>
+                </a>
               </div>
             </div>
           </div>

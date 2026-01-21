@@ -6,7 +6,7 @@ import PricingPreview from '@/components/features/PricingPreview'
 
 export const metadata = {
   title: 'Features - EmailVerse | Advanced Email Marketing Tools',
-  description: 'Discover all the powerful features that make EmailVerse the leading email marketing platform. AI automation, analytics, templates, and more.',
+  description: 'Discover all the powerful features that make EmailVerse the leading email marketing platform. Advanced analytics, templates, integrations, and more.',
 }
 
 export default function FeaturesPage() {

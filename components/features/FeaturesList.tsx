@@ -164,12 +164,17 @@ const FeaturesList = () => {
             Ready to Experience All These Features?
           </h3>
           <p className="text-xl mb-8 opacity-90">
-            Start your free trial today and see how EmailVerse can transform your email marketing.
+            Get your custom quote today and see how EmailVerse can transform your email marketing.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
-              Start Free Trial
-            </button>
+            <a 
+              href="https://calendly.com/emailverse/consultation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-block text-center"
+            >
+              Start Growing Your Leads Now
+            </a>
             <button className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold py-3 px-8 rounded-lg transition-all duration-200">
               Schedule Demo
             </button>

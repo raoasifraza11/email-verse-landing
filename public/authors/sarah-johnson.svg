@@ -1,0 +1,28 @@
+<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="75" cy="75" r="75" fill="#f3f4f6"/>
+  
+  <!-- Face -->
+  <circle cx="75" cy="55" r="28" fill="#fbbf24"/>
+  
+  <!-- Hair (blonde/light brown) -->
+  <path d="M47 45 Q47 25 75 25 Q103 25 103 45 Q103 35 95 35 Q85 30 75 30 Q65 30 55 35 Q47 35 47 45" fill="#d97706"/>
+  
+  <!-- Eyes -->
+  <circle cx="68" cy="50" r="3" fill="#1f2937"/>
+  <circle cx="82" cy="50" r="3" fill="#1f2937"/>
+  <circle cx="68" cy="49" r="1" fill="#ffffff"/>
+  <circle cx="82" cy="49" r="1" fill="#ffffff"/>
+  
+  <!-- Nose -->
+  <ellipse cx="75" cy="58" rx="2" ry="3" fill="#f59e0b"/>
+  
+  <!-- Mouth -->
+  <path d="M70 65 Q75 70 80 65" stroke="#dc2626" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Body/Shoulders -->
+  <ellipse cx="75" cy="130" rx="40" ry="30" fill="#3b82f6"/>
+  
+  <!-- Professional attire collar -->
+  <path d="M60 110 L75 120 L90 110 L90 130 L60 130 Z" fill="#1e40af"/>
+</svg>

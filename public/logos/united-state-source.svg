@@ -1,0 +1,11 @@
+<svg viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="80" fill="#ffffff"/>
+  <path d="M20 20 L60 20 L60 60 L20 60 Z" fill="#dc2626"/>
+  <path d="M25 25 L35 35 L45 25 L55 35 L55 55 L25 55 Z" fill="#ffffff"/>
+  <text x="80" y="35" fill="#dc2626" font-family="Arial, sans-serif" font-size="14" font-weight="700">
+    UNITED
+  </text>
+  <text x="80" y="50" fill="#dc2626" font-family="Arial, sans-serif" font-size="12" font-weight="600">
+    STATE SOURCE
+  </text>
+</svg>

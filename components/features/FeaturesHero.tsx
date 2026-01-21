@@ -30,10 +30,15 @@ const FeaturesHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button className="btn-primary">
-              Start Free Trial
+            <a 
+              href="https://calendly.com/emailverse/consultation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary inline-flex items-center"
+            >
+              Start Growing Your Leads Now
               <ArrowRight className="h-4 w-4 ml-2" />
-            </button>
+            </a>
             <button className="btn-secondary">
               Watch Demo
             </button>

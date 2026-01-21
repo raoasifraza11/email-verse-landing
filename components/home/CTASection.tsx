@@ -37,14 +37,10 @@ const CTASection = () => {
   ]
 
   const testimonialStats = [
-    { value: '50K+', label: 'Active Users', icon: Users },
-    { value: '2.5B+', label: 'Emails Sent', icon: TrendingUp },
-    { value: '98.5%', label: 'Delivery Rate', icon: Shield },
+    { value: '2K+', label: 'Projects Delivered', icon: Users },
+    { value: '1B+', label: 'Emails Sent Successfully', icon: TrendingUp },
+    { value: '99%', label: 'Delivery Rate', icon: Shield },
     { value: '4.9/5', label: 'Customer Rating', icon: Star }
-  ]
-
-  const companyLogos = [
-    'Microsoft', 'Shopify', 'Airbnb', 'Uber', 'Netflix', 'Spotify'
   ]
 
   return (
@@ -72,8 +68,9 @@ const CTASection = () => {
               </h2>
               
               <p className="text-xl opacity-90 leading-relaxed">
-                Join thousands of businesses that trust EmailVerse to deliver 
-                exceptional email campaigns and drive real results. Start your free trial today.
+                Get powerful email marketing tools plus expert services to help you succeed. 
+                Our platform provides everything you need, and our team ensures you use it effectively 
+                to drive real results.
               </p>
             </div>
 
@@ -105,17 +102,6 @@ const CTASection = () => {
 
             {/* Social Proof */}
             <div className="space-y-6">
-              <div>
-                <h4 className="text-lg font-semibold mb-4">Trusted by industry leaders:</h4>
-                <div className="flex flex-wrap items-center gap-6 opacity-80">
-                  {companyLogos.map((company, index) => (
-                    <div key={index} className="text-sm font-semibold tracking-wider">
-                      {company}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {testimonialStats.map((stat, index) => (
@@ -134,8 +120,8 @@ const CTASection = () => {
           {/* Right Column - Contact Form */}
           <div className="lg:sticky lg:top-8">
             <ContactForm 
-              title="Start Your Free Trial"
-              subtitle="No credit card required • 14-day free trial • Cancel anytime"
+              title="Get Your Custom Quote"
+              subtitle="Free consultation • Custom solutions • Expert support"
             />
           </div>
         </div>

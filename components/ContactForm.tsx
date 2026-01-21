@@ -293,23 +293,15 @@ const ContactForm = ({ title = "Get Started with EmailVerse", subtitle = "Join 5
         </div>
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2"
+        <a
+          href="https://calendly.com/emailverse/consultation"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 inline-block text-center"
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-5 w-5 animate-spin" />
-              <span>Creating Your Account...</span>
-            </>
-          ) : (
-            <>
-              <Mail className="h-5 w-5" />
-              <span>Start Free Trial</span>
-            </>
-          )}
-        </button>
+          <Mail className="h-5 w-5" />
+          <span>Start Growing Your Leads Now</span>
+        </a>
 
         {/* Status Messages */}
         {submitStatus === 'success' && (
@@ -329,7 +321,7 @@ const ContactForm = ({ title = "Get Started with EmailVerse", subtitle = "Join 5
         {/* Footer */}
         <div className="text-center text-sm text-gray-500 pt-4 border-t border-gray-200">
           <p>By signing up, you agree to our <a href="/terms" className="text-primary-600 hover:underline">Terms of Service</a> and <a href="/privacy" className="text-primary-600 hover:underline">Privacy Policy</a></p>
-          <p className="mt-2">✓ Free 14-day trial • ✓ No credit card required • ✓ Cancel anytime</p>
+          <p className="mt-2">✓ Software access • ✓ Expert setup • ✓ Ongoing support</p>
         </div>
       </form>
     </div>

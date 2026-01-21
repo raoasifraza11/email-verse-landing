@@ -8,7 +8,7 @@ const PerformanceMetrics = () => {
       color: 'text-green-600',
       bgColor: 'bg-green-100',
       stats: [
-        { label: 'Inbox Placement Rate', value: '98.5%', trend: '+2.1%' },
+        { label: 'Inbox Placement Rate', value: '99%', trend: '+2.1%' },
         { label: 'Spam Rate', value: '0.8%', trend: '-0.3%' },
         { label: 'Bounce Rate', value: '1.2%', trend: '-0.5%' },
         { label: 'Unsubscribe Rate', value: '0.3%', trend: '-0.1%' }
@@ -20,7 +20,7 @@ const PerformanceMetrics = () => {
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
       stats: [
-        { label: 'Average Send Speed', value: '1M/hour', trend: '+15%' },
+        { label: 'Average Send Speed', value: '1M/day', trend: '+15%' },
         { label: 'API Response Time', value: '120ms', trend: '-8ms' },
         { label: 'Uptime', value: '99.98%', trend: '+0.02%' },
         { label: 'Processing Time', value: '2.3s', trend: '-0.4s' }
@@ -32,8 +32,8 @@ const PerformanceMetrics = () => {
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
       stats: [
-        { label: 'Countries Served', value: '180+', trend: '+5' },
-        { label: 'Languages Supported', value: '25', trend: '+3' },
+        { label: 'Countries Served', value: '20+', trend: '+5' },
+        { label: 'Languages Supported', value: '8+', trend: '+3' },
         { label: 'Time Zones', value: '24', trend: '0' },
         { label: 'Data Centers', value: '12', trend: '+2' }
       ]
@@ -44,9 +44,9 @@ const PerformanceMetrics = () => {
       color: 'text-orange-600',
       bgColor: 'bg-orange-100',
       stats: [
-        { label: 'Workflows Active', value: '25K+', trend: '+18%' },
-        { label: 'Triggers per Day', value: '2.1M', trend: '+22%' },
-        { label: 'Success Rate', value: '99.2%', trend: '+0.8%' },
+        { label: 'Workflows Active', value: '5K+', trend: '+18%' },
+        { label: 'Triggers per Day', value: '800', trend: '+22%' },
+        { label: 'Success Rate', value: '96%', trend: '+0.8%' },
         { label: 'Time Saved', value: '40hrs/week', trend: '+5hrs' }
       ]
     }
@@ -108,11 +108,16 @@ const PerformanceMetrics = () => {
             Experience These Performance Benefits
           </h3>
           <p className="text-lg mb-6 opacity-90">
-            Join thousands of businesses achieving exceptional email marketing results with EmailVerse.
+            Join hundreds of businesses achieving exceptional email marketing results with EmailVerse.
           </p>
-          <button className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
-            Start Free Trial
-          </button>
+          <a 
+            href="https://calendly.com/emailverse/consultation" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-block text-center"
+          >
+            Start Growing Your Leads Now
+          </a>
         </div>
       </div>
     </section>

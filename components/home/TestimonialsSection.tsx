@@ -9,10 +9,10 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       id: 1,
-      name: 'Sarah Johnson',
-      role: 'Marketing Director',
-      company: 'TechStart Inc.',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      name: 'Franco Ieraci',
+      role: 'Founder',
+      company: 'Pitch Capital',
+      image: '/authors/sarah-johnson.svg',
       rating: 5,
       text: "EmailVerse transformed our email marketing completely. We saw a 300% increase in engagement rates within the first month. The AI-powered automation is incredible!",
       metrics: {
@@ -22,10 +22,10 @@ const TestimonialsSection = () => {
     },
     {
       id: 2,
-      name: 'Michael Chen',
-      role: 'E-commerce Manager',
-      company: 'Fashion Forward',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      name: 'Raleigh',
+      role: 'Founder',
+      company: 'PMHOA',
+      image: '/authors/michael-chen.svg',
       rating: 5,
       text: "The segmentation tools are phenomenal. We can target our customers with laser precision, and our conversion rates have never been higher. Best investment we've made!",
       metrics: {
@@ -35,10 +35,10 @@ const TestimonialsSection = () => {
     },
     {
       id: 3,
-      name: 'Emily Rodriguez',
-      role: 'Growth Marketing Lead',
-      company: 'SaaS Solutions',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+      name: 'Hamza',
+      role: 'Founder',
+      company: 'Scaleupwithhj',
+      image: '/authors/emily-rodriguez.svg',
       rating: 5,
       text: "The analytics dashboard gives us insights we never had before. We can optimize our campaigns in real-time and the ROI tracking is incredibly detailed.",
       metrics: {
@@ -51,7 +51,7 @@ const TestimonialsSection = () => {
       name: 'David Park',
       role: 'Digital Marketing Specialist',
       company: 'Local Business Co.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      image: '/authors/david-park.svg',
       rating: 5,
       text: "As a small business, we needed something powerful but easy to use. EmailVerse delivered exactly that. The templates are beautiful and the automation saves us hours.",
       metrics: {

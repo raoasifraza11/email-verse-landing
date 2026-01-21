@@ -1,4 +1,4 @@
-import { MapPin, Users, TrendingUp, Clock } from 'lucide-react'
+import { MapPin, Users, TrendingUp } from 'lucide-react'
 
 const GlobalInsights = () => {
   const regions = [
@@ -7,13 +7,6 @@ const GlobalInsights = () => {
     { name: 'Asia Pacific', users: '8,956', growth: '+25%', color: 'bg-purple-500' },
     { name: 'Latin America', users: '3,421', growth: '+22%', color: 'bg-orange-500' },
     { name: 'Middle East & Africa', users: '1,589', growth: '+35%', color: 'bg-red-500' }
-  ]
-
-  const timeZoneStats = [
-    { time: '00:00 UTC', active: 2847, campaigns: 156 },
-    { time: '06:00 UTC', active: 8234, campaigns: 423 },
-    { time: '12:00 UTC', active: 15678, campaigns: 892 },
-    { time: '18:00 UTC', active: 12456, campaigns: 678 }
   ]
 
   return (
@@ -53,80 +46,6 @@ const GlobalInsights = () => {
           </div>
         </div>
 
-        {/* Time Zone Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <div className="flex items-center space-x-2 mb-6">
-              <Clock className="h-6 w-6 text-primary-600" />
-              <h3 className="text-xl font-bold text-gray-900">24-Hour Activity</h3>
-            </div>
-            
-            <div className="space-y-4">
-              {timeZoneStats.map((stat, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div>
-                    <div className="font-semibold text-gray-900">{stat.time}</div>
-                    <div className="text-sm text-gray-600">Active Users: {stat.active.toLocaleString()}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-primary-600">{stat.campaigns}</div>
-                    <div className="text-sm text-gray-600">Campaigns</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <div className="flex items-center space-x-2 mb-6">
-              <TrendingUp className="h-6 w-6 text-primary-600" />
-              <h3 className="text-xl font-bold text-gray-900">Global Trends</h3>
-            </div>
-            
-            <div className="space-y-6">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-700">Mobile Opens</span>
-                  <span className="font-semibold">67.8%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full w-[68%]"></div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-700">Desktop Opens</span>
-                  <span className="font-semibold">32.2%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-green-500 h-2 rounded-full w-[32%]"></div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-700">AI Automation Usage</span>
-                  <span className="font-semibold">84.3%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-purple-500 h-2 rounded-full w-[84%]"></div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-700">A/B Testing Adoption</span>
-                  <span className="font-semibold">76.9%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-orange-500 h-2 rounded-full w-[77%]"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Key Insights */}
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">
@@ -140,8 +59,8 @@ const GlobalInsights = () => {
             </div>
             
             <div className="text-center p-6 bg-green-50 rounded-lg">
-              <div className="text-3xl font-bold text-green-600 mb-2">84.3%</div>
-              <div className="text-sm text-green-700">of users leverage AI automation</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">76.9%</div>
+              <div className="text-sm text-green-700">use A/B testing features</div>
             </div>
             
             <div className="text-center p-6 bg-purple-50 rounded-lg">
@@ -150,7 +69,7 @@ const GlobalInsights = () => {
             </div>
             
             <div className="text-center p-6 bg-orange-50 rounded-lg">
-              <div className="text-3xl font-bold text-orange-600 mb-2">180+</div>
+              <div className="text-3xl font-bold text-orange-600 mb-2">20+</div>
               <div className="text-sm text-orange-700">countries using EmailVerse</div>
             </div>
           </div>

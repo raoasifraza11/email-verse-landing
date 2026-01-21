@@ -19,7 +19,9 @@ import {
   Palette,
   Search,
   Settings,
-  Star
+  Star,
+  Shield,
+  Calculator
 } from 'lucide-react'
 
 const FreeToolsSection = () => {
@@ -63,45 +65,45 @@ const FreeToolsSection = () => {
     },
     {
       id: 2,
-      name: 'Smart Segmentation',
-      description: 'AI-driven audience segmentation for targeted campaigns',
-      icon: Target,
-      gradient: 'from-gray-700 to-gray-800',
-      features: ['Smart Segmentation', 'Behavioral Targeting', 'Custom Filters', 'Real-time Updates'],
+      name: 'Email Spam Checker',
+      description: 'Analyze your emails to avoid spam filters and improve deliverability',
+      icon: Shield,
+      gradient: 'from-red-500 to-red-600',
+      features: ['Spam Score Analysis', 'Word Highlighting', 'Deliverability Tips', 'Instant Results'],
       demo: {
-        title: 'Segment Your Audience',
-        content: 'Create precise audience segments with AI-powered insights.',
+        title: 'Check Spam Score',
+        content: 'Ensure your emails reach the inbox with our spam detection tool.',
         mockData: {
-          segments: 12,
-          accuracy: '96.7%',
-          engagement: '+45%'
+          score: '87/100',
+          words: '12 flagged',
+          status: 'Good'
         }
       }
     },
     {
       id: 3,
-      name: 'Performance Analytics',
-      description: 'Real-time analytics and insights for your campaigns',
-      icon: BarChart3,
-      gradient: 'from-primary-600 to-primary-700',
-      features: ['Real-time Metrics', 'Custom Reports', 'ROI Tracking', 'Competitor Analysis'],
+      name: 'ROI Calculator',
+      description: 'Calculate your potential return on investment with email marketing',
+      icon: Calculator,
+      gradient: 'from-green-600 to-green-700',
+      features: ['Revenue Projections', 'Cost Analysis', 'Performance Metrics', 'Industry Benchmarks'],
       demo: {
-        title: 'Track Performance',
-        content: 'Monitor your campaigns with detailed analytics and AI insights.',
+        title: 'Calculate ROI',
+        content: 'See your potential return on investment with detailed projections.',
         mockData: {
-          campaigns: 156,
+          roi: '540%',
           revenue: '$24.7K',
-          roi: '340%'
+          payback: '12 days'
         }
       }
     }
   ]
 
   const stats = [
-    { label: 'Templates Created', value: '50K+', icon: Mail, color: 'text-blue-600' },
-    { label: 'Subject Lines Analyzed', value: '100K+', icon: FileText, color: 'text-green-600' },
+    { label: 'Projects Delivered', value: '1K+', icon: Mail, color: 'text-blue-600' },
+    { label: 'Subject Lines Analyzed', value: '35K+', icon: FileText, color: 'text-green-600' },
     { label: 'Campaigns Optimized', value: '25K+', icon: Target, color: 'text-purple-600' },
-    { label: 'Reports Generated', value: '75K+', icon: BarChart3, color: 'text-orange-600' }
+    { label: 'Outbound Machines Delivered', value: '2K+', icon: BarChart3, color: 'text-orange-600' }
   ]
 
   const handleToolDemo = async (toolId: number) => {
@@ -177,14 +179,40 @@ const FreeToolsSection = () => {
                           </div>
                         ))}
                       </div>
-                      <button className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
-                        activeTool === index 
-                          ? 'text-primary-700' 
-                          : 'text-primary-600 hover:text-primary-700'
-                      }`}>
-                        <span>Try Free Tool</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </button>
+                      {tool.id === 2 ? (
+                        <a 
+                          href="/spam-checker"
+                          className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
+                            activeTool === index 
+                              ? 'text-primary-700' 
+                              : 'text-primary-600 hover:text-primary-700'
+                          }`}
+                        >
+                          <span>Try Free Tool</span>
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </a>
+                      ) : tool.id === 3 ? (
+                        <a 
+                          href="/roi-calculator"
+                          className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
+                            activeTool === index 
+                              ? 'text-primary-700' 
+                              : 'text-primary-600 hover:text-primary-700'
+                          }`}
+                        >
+                          <span>Try Free Tool</span>
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </a>
+                      ) : (
+                        <button className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
+                          activeTool === index 
+                            ? 'text-primary-700' 
+                            : 'text-primary-600 hover:text-primary-700'
+                        }`}>
+                          <span>Try Free Tool</span>
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -305,10 +333,28 @@ const FreeToolsSection = () => {
               {/* Enhanced Action Buttons */}
               <div className="p-6 bg-gradient-to-br from-gray-50 to-white border-t border-gray-100">
                 <div className="flex space-x-3">
-                  <button className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}>
-                    <Eye className="h-4 w-4" />
-                    <span>Try Now</span>
-                  </button>
+                  {activeTool === 2 ? (
+                    <a 
+                      href="/spam-checker"
+                      className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Try Now</span>
+                    </a>
+                  ) : activeTool === 3 ? (
+                    <a 
+                      href="/roi-calculator"
+                      className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Try Now</span>
+                    </a>
+                  ) : (
+                    <button className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}>
+                      <Eye className="h-4 w-4" />
+                      <span>Try Now</span>
+                    </button>
+                  )}
                   <button className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-lg border-2 border-gray-300 hover:border-primary-300 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
                     <Download className="h-4 w-4" />
                     <span>Export</span>
@@ -332,7 +378,7 @@ const FreeToolsSection = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              Trusted by <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Thousands</span> of Marketers
+              Trusted by <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Hundreds</span> of Marketers
             </h3>
             <p className="text-gray-600">
               See how our AI-powered tools are making a difference worldwide
@@ -355,10 +401,15 @@ const FreeToolsSection = () => {
           <div className="text-center mt-12 pt-8 border-t border-gray-200">
             <h4 className="text-xl font-semibold text-gray-900 mb-4">Ready to supercharge your email marketing?</h4>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+              <a 
+                href="https://calendly.com/emailverse/consultation"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 inline-block text-center"
+              >
                 <Sparkles className="h-5 w-5" />
-                <span>Start Free Trial</span>
-              </button>
+                <span>Start Growing Your Leads Now</span>
+              </a>
               <button className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-8 rounded-lg border-2 border-gray-300 hover:border-primary-300 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
                 <Eye className="h-5 w-5" />
                 <span>Watch Demo</span>

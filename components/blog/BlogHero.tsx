@@ -12,9 +12,8 @@ const BlogHero = () => {
   }
 
   const trendingTopics = [
-    'AI Automation',
     'Email Deliverability',
-    'Segmentation Strategies',
+    'Spam Prevention',
     'A/B Testing',
     'GDPR Compliance'
   ]

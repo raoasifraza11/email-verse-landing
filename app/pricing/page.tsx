@@ -84,7 +84,7 @@ export default function PricingPage() {
           </p>
           <div className="flex items-center justify-center space-x-4 text-primary-100">
             <Check className="h-5 w-5" />
-            <span>14-day free trial</span>
+            <span>Free consultation</span>
             <Check className="h-5 w-5" />
             <span>Cancel anytime</span>
             <Check className="h-5 w-5" />
@@ -123,13 +123,18 @@ export default function PricingPage() {
                     <span className="text-xl text-secondary-500 ml-1">{plan.period}</span>
                   </div>
                   
-                  <button className={`w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-300 ${
-                    plan.popular
-                      ? 'bg-gradient-primary text-white hover:shadow-lg hover:shadow-primary-500/25'
-                      : 'bg-secondary-100 text-secondary-900 hover:bg-secondary-200'
-                  }`}>
-                    Start Free Trial
-                  </button>
+                  <a 
+                    href="https://calendly.com/emailverse/consultation"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-300 inline-block text-center ${
+                      plan.popular
+                        ? 'bg-gradient-primary text-white hover:shadow-lg hover:shadow-primary-500/25'
+                        : 'bg-secondary-100 text-secondary-900 hover:bg-secondary-200'
+                    }`}
+                  >
+                    Start Growing Your Leads Now
+                  </a>
                 </div>
                 
                 <div className="px-8 pb-8">

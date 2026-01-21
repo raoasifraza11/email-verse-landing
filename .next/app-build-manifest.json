@@ -15,6 +15,41 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/statistics/page.js"
+    ],
+    "/case-studies/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/case-studies/page.js"
+    ],
+    "/case-studies/techflow-solutions/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/case-studies/techflow-solutions/page.js"
+    ],
+    "/case-studies/realty-masters/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/case-studies/realty-masters/page.js"
+    ],
+    "/case-studies/ecommerce-plus/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/case-studies/ecommerce-plus/page.js"
+    ],
+    "/features/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/features/page.js"
+    ],
+    "/spam-checker/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/spam-checker/page.js"
+    ],
+    "/roi-calculator/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/roi-calculator/page.js"
     ]
   }
 }

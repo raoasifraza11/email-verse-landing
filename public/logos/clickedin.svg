@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="80" fill="#ffffff"/>
+  <text x="100" y="35" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="16" font-weight="700">
+    ClickedIn
+  </text>
+  <text x="100" y="55" text-anchor="middle" fill="#9ca3af" font-family="Arial, sans-serif" font-size="10">
+    AI SALES ASSISTANT
+  </text>
+</svg>

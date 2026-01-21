@@ -19,6 +19,7 @@ const Footer = () => {
     resources: [
       { name: 'Documentation', href: '/docs' },
       { name: 'Help Center', href: '/help' },
+      { name: 'Case Studies', href: '/case-studies' },
       { name: 'Statistics', href: '/statistics' },
       { name: 'Status', href: '/status' },
     ],
@@ -43,15 +44,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center space-x-2 mb-4">
+            <Link href="/" className="flex items-center mb-4">
               <EmailVerseLogo 
-                className="h-8 w-8" 
+                className="h-8 w-auto" 
                 showText={false}
               />
-              <span className="text-xl font-bold">EmailVerse</span>
             </Link>
             <p className="text-secondary-400 mb-6 max-w-md">
-              The most advanced email marketing platform. Scale your campaigns with AI-powered tools and automation.
+              Advanced email marketing tools with expert services. Get the software you need plus professional guidance to succeed.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (

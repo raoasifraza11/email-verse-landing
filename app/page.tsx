@@ -1,5 +1,6 @@
 import HeroSection from '@/components/home/HeroSection'
 import FeaturesOverview from '@/components/home/FeaturesOverview'
+import CompanyLogos from '../components/home/CompanyLogos'
 import FreeToolsSection from '@/components/home/FreeToolsSection'
 import StatsSection from '@/components/home/StatsSection'
 import TestimonialsSection from '@/components/home/TestimonialsSection'
@@ -63,6 +64,9 @@ export default function Home() {
       <div className="bg-white">
         <FreeToolsSection />
       </div>
+      
+      {/* Company Logos Section */}
+      <CompanyLogos />
       
       {/* Curved Separator: White to Green */}
       <CurvedSeparator topColor="white" bottomColor="primary-600" />

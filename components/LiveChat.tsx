@@ -23,7 +23,6 @@ const LiveChat = () => {
 
   const quickReplies = [
     "Tell me about pricing",
-    "How does AI automation work?",
     "Can I see a demo?",
     "What integrations do you support?"
   ]
@@ -31,7 +30,7 @@ const LiveChat = () => {
   const agentResponses = [
     "Thanks for your interest! Let me help you with that. Our pricing starts at $29/month for up to 10,000 contacts. Would you like to see our full pricing plans?",
     "Great question! Our AI analyzes your subscriber behavior and automatically optimizes send times, subject lines, and content for better engagement. Want to see it in action?",
-    "I'd love to show you a demo! You can book a personalized demo with our team, or start with our free 14-day trial. Which would you prefer?",
+    "I'd love to show you a demo! You can book a personalized consultation with our team to see how we can help grow your business. Which would you prefer?",
     "We support 500+ integrations including Shopify, Salesforce, HubSpot, and many more. What specific tools are you looking to connect?",
     "That's a great question! Let me connect you with one of our specialists who can provide more detailed information.",
     "I'm here to help! Is there anything specific about EmailVerse you'd like to know more about?"
