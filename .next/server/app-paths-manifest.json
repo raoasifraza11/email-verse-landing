@@ -1,7 +1,0 @@
-{
-  "/case-studies/ecommerce-plus/page": "app/case-studies/ecommerce-plus/page.js",
-  "/features/page": "app/features/page.js",
-  "/page": "app/page.js",
-  "/spam-checker/page": "app/spam-checker/page.js",
-  "/roi-calculator/page": "app/roi-calculator/page.js"
-}
