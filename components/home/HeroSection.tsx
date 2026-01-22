@@ -94,10 +94,10 @@ const HeroSection = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-primary-100/10 to-accent-100/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[85vh]">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[75vh]">
           {/* Left Column - Content */}
-          <div className="space-y-12 z-10 flex flex-col justify-center">
+          <div className="space-y-10 z-10 flex flex-col justify-center">
             <div className="space-y-8">
               <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-100 to-accent-100 text-primary-800 rounded-full text-sm font-medium shadow-lg border border-primary-200 animate-bounce">
                 <Zap className="h-4 w-4 mr-3 animate-pulse" />
@@ -139,21 +139,15 @@ const HeroSection = () => {
               ))}
             </div>
 
-            {/* CTA Form */}
+            {/* CTA Button */}
             <div className="space-y-6 animate-fade-in-up animation-delay-1000">
               <div className="space-y-6 max-w-4xl">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <input
-                    type="email"
-                    placeholder="Enter your work email"
-                    className="flex-1 px-6 py-4 border-2 border-primary-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 shadow-lg text-secondary-900 placeholder-secondary-500 transition-all duration-300 text-lg"
-                    disabled
-                  />
+                <div className="flex justify-start">
                   <a 
                     href="https://calendly.com/emailverse/consultation"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-bold py-4 px-10 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-3 min-w-[200px] pulse-glow text-lg inline-block text-center"
+                    className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-bold py-4 px-10 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-3 min-w-[200px] pulse-glow text-lg"
                   >
                     <span>Start Growing Your Leads Now</span>
                     <ArrowRight className="h-5 w-5" />
@@ -204,18 +198,20 @@ const HeroSection = () => {
           </div>
 
           {/* Right Column - ROI Calculator */}
-          <div className="relative z-10 flex items-center justify-center">
-            <ROICalculator />
+          <div className="relative z-10 flex items-start justify-center lg:justify-end">
+            <div className="w-full max-w-lg mx-auto lg:mx-0">
+              <ROICalculator />
+            </div>
 
             {/* Floating Success Indicators */}
-            <div className="absolute -top-4 -right-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white p-3 rounded-full shadow-lg animate-bounce">
-              <CheckCircle className="h-6 w-6" />
+            <div className="absolute -top-2 -right-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white p-2 rounded-full shadow-lg animate-bounce">
+              <CheckCircle className="h-5 w-5" />
             </div>
-            <div className="absolute -bottom-4 -left-4 bg-gradient-to-r from-accent-500 to-accent-600 text-white p-3 rounded-full shadow-lg animate-pulse">
-              <TrendingUp className="h-6 w-6" />
+            <div className="absolute -bottom-2 -left-2 bg-gradient-to-r from-accent-500 to-accent-600 text-white p-2 rounded-full shadow-lg animate-pulse">
+              <TrendingUp className="h-5 w-5" />
             </div>
-            <div className="absolute top-1/2 -right-8 bg-gradient-to-r from-primary-600 to-primary-700 text-white p-2 rounded-full shadow-lg animate-ping">
-              <Zap className="h-4 w-4" />
+            <div className="absolute top-1/2 -right-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white p-1.5 rounded-full shadow-lg animate-ping">
+              <Zap className="h-3 w-3" />
             </div>
           </div>
         </div>

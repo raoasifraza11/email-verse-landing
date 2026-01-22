@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Calculator, TrendingUp, DollarSign, Users, Zap, AlertTriangle, X, MessageCircle, ArrowRight, CheckCircle } from 'lucide-react'
 
 interface CalculatorResults {
@@ -30,6 +30,41 @@ interface ChatMessage {
   options?: string[]
 }
 
+// Typing indicator component
+const TypingIndicator = ({ selectedOption }: { selectedOption?: string }) => {
+  const [dots, setDots] = useState('.')
+  
+  useEffect(() => {
+    console.log('💬 TypingIndicator rendered with:', selectedOption)
+    const interval = setInterval(() => {
+      setDots(prev => {
+        if (prev === '...') return '.'
+        return prev + '.'
+      })
+    }, 500)
+    
+    return () => clearInterval(interval)
+  }, [selectedOption])
+  
+  return (
+    <div className="flex justify-start animate-fadeIn">
+      <div className="bg-gradient-to-r from-primary-50 to-primary-100 border-2 border-primary-200 text-gray-800 max-w-xs p-4 rounded-lg shadow-lg animate-pulse">
+        <div className="flex items-center space-x-3">
+          <div className="w-7 h-7 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center flex-shrink-0 animate-bounce">
+            <MessageCircle className="h-4 w-4 text-white" />
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium text-primary-800">
+              {selectedOption ? `Processing "${selectedOption}"` : 'AI is typing'}
+            </span>
+            <span className="text-sm text-primary-600 font-mono w-8 text-left font-bold">{dots}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ROICalculator = () => {
   const [currentStep, setCurrentStep] = useState(0)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
@@ -51,8 +86,30 @@ const ROICalculator = () => {
   const [results, setResults] = useState<CalculatorResults | null>(null)
   const [showWarning, setShowWarning] = useState(false)
   const [isCalculating, setIsCalculating] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
+  const [selectedOption, setSelectedOption] = useState<string>('')
   const [customInput, setCustomInput] = useState('')
   const [showCustomInput, setShowCustomInput] = useState(false)
+
+  // Ref for chat messages container to enable auto-scroll
+  const chatMessagesRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll to bottom when messages change or typing starts
+  const scrollToBottom = () => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight
+    }
+  }
+
+  // Scroll to bottom when messages change or typing state changes
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatMessages, isTyping])
+
+  // Debug effect to track typing state changes
+  useEffect(() => {
+    console.log('📊 STATE UPDATE - isTyping:', isTyping, 'selectedOption:', selectedOption, 'step:', currentStep)
+  }, [isTyping, selectedOption, currentStep])
 
   const questions = [
     {
@@ -83,6 +140,8 @@ const ROICalculator = () => {
   ]
 
   const handleOptionClick = (option: string) => {
+    console.log('🔥 OPTION CLICKED:', option, 'Step:', currentStep)
+    
     const currentQuestion = questions[currentStep]
     let value = option
 
@@ -113,15 +172,30 @@ const ROICalculator = () => {
       else if (option === '$1000+') value = '1500'
     }
 
-    // Update form data
-    setFormData(prev => ({ ...prev, [currentQuestion.field]: value }))
-
-    // Add user message
+    // 1. Add user message immediately
     setChatMessages(prev => [...prev, { type: 'user', message: option }])
-
-    // Move to next question or calculate
-    if (currentStep < questions.length - 1) {
-      setTimeout(() => {
+    
+    // 2. Update form data
+    setFormData(prev => ({ ...prev, [currentQuestion.field]: value }))
+    
+    // 3. Start typing animation
+    console.log('🚀 STARTING TYPING ANIMATION for:', option)
+    setIsTyping(true)
+    setSelectedOption(option)
+    
+    // 4. Scroll to bottom to show typing indicator
+    setTimeout(() => {
+      scrollToBottom()
+    }, 100)
+    
+    // 4. After 1.5 seconds, stop typing and show next question
+    setTimeout(() => {
+      console.log('⏰ TIMEOUT EXECUTED - Stopping typing animation')
+      setIsTyping(false)
+      setSelectedOption('')
+      
+      if (currentStep < questions.length - 1) {
+        // Move to next question
         const nextQuestion = questions[currentStep + 1]
         setChatMessages(prev => [...prev, {
           type: 'ai',
@@ -129,21 +203,35 @@ const ROICalculator = () => {
           options: nextQuestion.options
         }])
         setCurrentStep(currentStep + 1)
-      }, 500)
-    } else {
-      // All questions answered, calculate ROI
-      setTimeout(() => {
+        console.log('📝 MOVED TO NEXT STEP:', currentStep + 1)
+        
+        // Scroll to bottom after adding new message
+        setTimeout(() => {
+          scrollToBottom()
+        }, 100)
+      } else {
+        // All questions answered, calculate ROI
         setChatMessages(prev => [...prev, {
           type: 'ai',
           message: 'Perfect! Let me calculate your ROI based on your answers...'
         }])
         calculateROI({ ...formData, [currentQuestion.field]: value })
-      }, 500)
-    }
+        console.log('🧮 STARTING ROI CALCULATION')
+        
+        // Scroll to bottom after adding calculation message
+        setTimeout(() => {
+          scrollToBottom()
+        }, 100)
+      }
+    }, 1500)
   }
 
   const handleCustomSubmit = () => {
     if (!customInput.trim()) return
+
+    // Immediately show typing
+    setIsTyping(true)
+    setSelectedOption(customInput)
 
     const currentQuestion = questions[currentStep]
     let value = customInput
@@ -163,9 +251,18 @@ const ROICalculator = () => {
     setCustomInput('')
     setShowCustomInput(false)
 
-    // Continue to next question
-    if (currentStep < questions.length - 1) {
-      setTimeout(() => {
+    // Scroll to show typing indicator
+    setTimeout(() => {
+      scrollToBottom()
+    }, 100)
+
+    // Show typing animation for 1.5 seconds, then proceed
+    setTimeout(() => {
+      setIsTyping(false)
+      setSelectedOption('')
+      
+      // Continue to next question
+      if (currentStep < questions.length - 1) {
         const nextQuestion = questions[currentStep + 1]
         setChatMessages(prev => [...prev, {
           type: 'ai',
@@ -173,16 +270,24 @@ const ROICalculator = () => {
           options: nextQuestion.options
         }])
         setCurrentStep(currentStep + 1)
-      }, 500)
-    } else {
-      setTimeout(() => {
+        
+        // Scroll after adding new message
+        setTimeout(() => {
+          scrollToBottom()
+        }, 100)
+      } else {
         setChatMessages(prev => [...prev, {
           type: 'ai',
           message: 'Perfect! Let me calculate your ROI based on your answers...'
         }])
         calculateROI({ ...formData, [currentQuestion.field]: value })
-      }, 500)
-    }
+        
+        // Scroll after adding calculation message
+        setTimeout(() => {
+          scrollToBottom()
+        }, 100)
+      }
+    }, 1500)
   }
 
   const calculateROI = async (data: typeof formData) => {
@@ -279,6 +384,7 @@ const ROICalculator = () => {
   }
 
   const resetCalculator = () => {
+    console.log('🔄 RESETTING CALCULATOR')
     setCurrentStep(0)
     setFormData({
       emailsPerDay: '',
@@ -288,6 +394,9 @@ const ROICalculator = () => {
       productPrice: ''
     })
     setResults(null)
+    setIsTyping(false)
+    setSelectedOption('')
+    setShowCustomInput(false)
     setChatMessages([
       {
         type: 'ai',
@@ -298,15 +407,15 @@ const ROICalculator = () => {
   }
 
   return (
-    <div className="relative bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-all duration-500 border-2 border-primary-100 max-w-lg w-full">
+    <div className="relative bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-all duration-500 border-2 border-primary-100 w-full max-w-lg mx-auto">
       {/* Header */}
       <div className="text-center mb-6">
-        <div className="flex items-center justify-center space-x-2 mb-4">
+        <div className="flex items-center justify-center space-x-3 mb-4">
           <div className="bg-gradient-to-r from-primary-500 to-primary-600 p-3 rounded-xl">
             <MessageCircle className="h-6 w-6 text-white" />
           </div>
           <h3 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-            AI ROI Calculator
+            ROI Calculator
           </h3>
         </div>
         <p className="text-gray-600 text-sm">Interactive AI-powered ROI calculation</p>
@@ -316,7 +425,11 @@ const ROICalculator = () => {
         /* Chat Interface */
         <div className="space-y-4">
           {/* Chat Messages */}
-          <div className="bg-gray-50 rounded-lg p-4 max-h-80 overflow-y-auto space-y-4">
+          <div 
+            ref={chatMessagesRef}
+            className="bg-gray-50 rounded-lg p-4 max-h-80 overflow-y-auto space-y-4 scroll-smooth"
+            style={{ scrollBehavior: 'smooth' }}
+          >
             {chatMessages.map((msg, index) => (
               <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-xs p-3 rounded-lg ${
@@ -336,12 +449,20 @@ const ROICalculator = () => {
               </div>
             ))}
             
+            {/* Typing Indicator */}
+            {isTyping && <TypingIndicator selectedOption={selectedOption} />}
+            
             {isCalculating && (
               <div className="flex justify-start">
                 <div className="bg-white border border-gray-200 text-gray-800 max-w-xs p-3 rounded-lg">
                   <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div>
-                    <span className="text-sm">Calculating your ROI...</span>
+                    <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MessageCircle className="h-3 w-3 text-white" />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div>
+                      <span className="text-sm">Calculating your ROI...</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -349,7 +470,7 @@ const ROICalculator = () => {
           </div>
 
           {/* Options or Custom Input */}
-          {!isCalculating && !results && (
+          {!isCalculating && !results && !isTyping && (
             <div className="space-y-3">
               {showCustomInput ? (
                 <div className="space-y-3">
@@ -385,7 +506,7 @@ const ROICalculator = () => {
                   <button
                     key={index}
                     onClick={() => handleOptionClick(option)}
-                    className="w-full text-left p-3 bg-white border border-gray-200 hover:border-primary-300 hover:bg-primary-50 rounded-lg transition-all duration-200 text-sm font-medium text-gray-700 hover:text-primary-700"
+                    className="w-full text-left p-4 bg-white border border-gray-200 hover:border-primary-300 hover:bg-primary-50 rounded-lg transition-all duration-200 text-sm font-medium text-gray-700 hover:text-primary-700"
                   >
                     {option}
                   </button>
@@ -396,27 +517,27 @@ const ROICalculator = () => {
         </div>
       ) : (
         /* Results Display */
-        <div className="space-y-4">
-          <div className="text-center mb-4">
-            <div className="flex items-center justify-center space-x-2 mb-2">
+        <div className="space-y-5">
+          <div className="text-center mb-5">
+            <div className="flex items-center justify-center space-x-2 mb-3">
               <CheckCircle className="h-6 w-6 text-green-600" />
-              <h4 className="text-lg font-bold text-gray-800">Your ROI Report</h4>
+              <h4 className="text-xl font-bold text-gray-800">Your ROI Report</h4>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
-              <div className="flex items-center space-x-2 mb-2">
-                <DollarSign className="h-4 w-4 text-green-600" />
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-lg border border-green-200">
+              <div className="flex items-center space-x-2 mb-3">
+                <DollarSign className="h-5 w-5 text-green-600" />
                 <span className="text-sm font-medium text-green-800">Monthly Revenue</span>
               </div>
               <div className="text-2xl font-bold text-green-700">
                 {formatCurrency(results.monthlyRevenue)}
               </div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-              <div className="flex items-center space-x-2 mb-2">
-                <TrendingUp className="h-4 w-4 text-blue-600" />
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-lg border border-blue-200">
+              <div className="flex items-center space-x-2 mb-3">
+                <TrendingUp className="h-5 w-5 text-blue-600" />
                 <span className="text-sm font-medium text-blue-800">Monthly Profit</span>
               </div>
               <div className="text-2xl font-bold text-blue-700">
@@ -425,9 +546,9 @@ const ROICalculator = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <Zap className="h-4 w-4 text-purple-600" />
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-lg border border-purple-200">
+            <div className="flex items-center space-x-2 mb-3">
+              <Zap className="h-5 w-5 text-purple-600" />
               <span className="text-sm font-medium text-purple-800">ROI</span>
             </div>
             <div className="text-3xl font-bold text-purple-700">
@@ -436,25 +557,25 @@ const ROICalculator = () => {
             <div className="text-sm text-purple-600">Monthly return</div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="bg-gray-50 p-3 rounded-lg">
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="bg-gray-50 p-4 rounded-lg">
               <div className="text-lg font-bold text-gray-700">{formatNumber(results.opens)}</div>
               <div className="text-xs text-gray-600">Opens</div>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="bg-gray-50 p-4 rounded-lg">
               <div className="text-lg font-bold text-gray-700">{formatNumber(results.replies)}</div>
               <div className="text-xs text-gray-600">Replies</div>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="bg-gray-50 p-4 rounded-lg">
               <div className="text-lg font-bold text-gray-700">{formatNumber(results.positives)}</div>
               <div className="text-xs text-gray-600">Meetings</div>
             </div>
           </div>
 
-          <div className="flex space-x-2">
+          <div className="flex space-x-3">
             <button
               onClick={resetCalculator}
-              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors text-sm"
             >
               Start Over
             </button>
@@ -462,7 +583,7 @@ const ROICalculator = () => {
               href="https://calendly.com/emailverse/consultation"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-medium py-2 px-4 rounded-lg transition-all text-center text-sm"
+              className="flex-1 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-medium py-3 px-4 rounded-lg transition-all text-center text-sm"
             >
               Start Growing Your Leads Now
             </a>
