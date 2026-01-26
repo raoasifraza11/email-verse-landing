@@ -213,6 +213,24 @@ Deploy this site to Google Cloud Platform with **minimal costs** using Cloud Run
 
 > Cloud Run scales to **zero** when idle — no traffic means no cost!
 
+#### 📊 Detailed Cost Breakdown
+
+| GCP Service | Pricing | Your Config | Est. Monthly |
+|-------------|---------|-------------|--------------|
+| **Cloud Run** | $0.00002400/vCPU-sec | 1 vCPU, 512MB | ~$0-5 |
+| | $0.00000250/GB-sec | min: 0, max: 3 | (scales to 0) |
+| **Artifact Registry** | $0.10/GB storage | ~200MB image | ~$0.02 |
+| **Network Egress** | First 1GB free | Low traffic | ~$0 |
+| **SSL Certificate** | Free | Included | $0 |
+| **Custom Domain** | Free | Optional | $0 |
+| | | **TOTAL** | **$0 - $5** |
+
+**Why so cheap?**
+- ✅ **Scale to zero** — No instances running when idle
+- ✅ **Pay per request** — Only charged for actual usage
+- ✅ **No base cost** — No VMs running 24/7
+- ✅ **Free tier** — 2M requests/month free
+
 ### 🏗️ Architecture
 
 ```
