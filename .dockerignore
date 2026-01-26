@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Next.js build output
+.next
+out
+
+# Terraform
+terraform/
+*.tf
+*.tfvars
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+*.md
+
+# Test files
+__tests__
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+coverage/
+
+# Docker
+Dockerfile*
+docker-compose*
+
+# Misc
+.env*.local
+.env.example
+

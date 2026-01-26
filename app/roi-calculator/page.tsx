@@ -3,6 +3,24 @@
 import { useState } from 'react'
 import { Calculator, TrendingUp, DollarSign, Users, Mail, BarChart3, Target, Zap } from 'lucide-react'
 
+interface ROIResults {
+  monthlyEmails: string
+  monthlyOpens: string
+  monthlyClicks: string
+  monthlyConversions: number
+  monthlyRevenue: string
+  currentRevenue: string
+  additionalRevenue: string
+  roi: number
+  totalCost: string
+  paybackPeriod: number
+  improvements: {
+    openRate: number
+    clickRate: number
+    conversion: number
+  }
+}
+
 export default function ROICalculatorPage() {
   const [formData, setFormData] = useState({
     emailsPerDay: '',
@@ -15,7 +33,7 @@ export default function ROICalculatorPage() {
     currentClickRate: ''
   })
   
-  const [results, setResults] = useState(null)
+  const [results, setResults] = useState<ROIResults | null>(null)
   const [isCalculating, setIsCalculating] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
 
@@ -34,7 +52,7 @@ export default function ROICalculatorPage() {
     { name: 'Agency Services', avgConversion: '3.5%', avgPrice: '$1,200' }
   ]
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
