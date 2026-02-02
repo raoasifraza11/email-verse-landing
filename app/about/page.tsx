@@ -40,7 +40,7 @@ export default function AboutPage() {
             About EmailVerse
           </h1>
           <p className="text-xl md:text-2xl text-green-100 mb-8 max-w-3xl mx-auto">
-            We're on a mission to make email marketing simple, powerful, and accessible for businesses of all sizes
+            We're on a mission to make email marketing simple, profitable, and stress-free for businesses by turning complex systems into a fully managed growth engine.
           </p>
         </div>
       </div>
@@ -52,20 +52,99 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
             <div className="prose prose-lg mx-auto text-gray-600">
               <p className="mb-6">
-                EmailVerse was born out of frustration with existing email marketing platforms. 
-                As marketers ourselves, we experienced firsthand the complexity, high costs, and 
-                limited functionality of traditional solutions.
+                EmailVerse was born out of frustration.
               </p>
               <p className="mb-6">
-                In 2020, we set out to build something different. A platform that would combine 
-                the power of AI with intuitive design, making advanced email marketing accessible 
-                to everyone from solo entrepreneurs to enterprise teams.
+                As marketers, we spent years using traditional email marketing platforms that were supposed to make outreach easier, but instead, they made it more complicated, expensive, and risky. We had to juggle multiple tools, pay for endless add-ons, manage domains, warm-up mailboxes, configure servers, and still worry about deliverability.
               </p>
-              <p>
-                Today, EmailVerse powers email campaigns for over 10,000 businesses worldwide, 
-                delivering more than 50 million emails every month with industry-leading 
-                deliverability rates.
+              <p className="mb-6">
+                And after all that… results were still uncertain.
               </p>
+              <p className="mb-6">
+                That's when we realized the problem wasn't email marketing itself, it was how it was being delivered.
+              </p>
+              <p className="font-semibold text-gray-900">
+                So we built EmailVerse.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Different Way Section */}
+      <div className="bg-gray-50 py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">A Different Way to Do Email Marketing</h2>
+            <div className="prose prose-lg mx-auto text-gray-600">
+              <p className="mb-6">
+                EmailVerse is not just another tool. It's a done-for-you outbound system.
+              </p>
+              <p className="mb-8">
+                Instead of selling software and leaving clients to struggle with setup, we built a model where our experts handle everything behind the scenes, including:
+              </p>
+              <div className="bg-white rounded-2xl p-8 shadow-sm">
+                <ul className="text-left space-y-3 text-gray-700">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    Infrastructure & domain setup
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    Mailbox creation & warm-up
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    Deliverability optimization
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    Technical configuration
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    Campaign strategy & execution
+                  </li>
+                </ul>
+              </div>
+              <p className="mt-8">
+                You don't need to worry about tools, IPs, spam filters, or inbox placement. We take care of the complexity, you only focus on leads, conversations, and growth.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* One Platform Section */}
+      <div className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">One Platform. One Team. Real Results.</h2>
+            <div className="prose prose-lg mx-auto text-gray-600">
+              <p className="mb-8">
+                With EmailVerse, you don't pay for scattered tools or waste time managing systems. You get a single partner responsible for your entire email engine, from infrastructure to performance.
+              </p>
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">Our clients enjoy:</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    <span>Clean inbox delivery</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    <span>Predictable outreach</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    <span>Transparent reporting</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-4"></div>
+                    <span>Consistent lead flow</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -115,18 +194,24 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
           <p className="text-xl text-gray-600 mb-8">
-            To democratize email marketing by providing powerful, AI-driven tools that help 
-            businesses of all sizes create meaningful connections with their customers.
+            To make email marketing simple, profitable, and stress-free for businesses by turning complex systems into a fully managed growth engine.
+          </p>
+          <p className="text-lg text-gray-700 mb-8">
+            Because you deserve results, not another dashboard to figure out.
           </p>
           <div className="bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Join Us on Our Journey</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Focus on Growth?</h3>
             <p className="text-gray-700 mb-6">
-              We're always looking for talented individuals who share our passion for 
-              innovation and customer success.
+              Stop juggling tools and start generating leads. Let our experts handle your entire email infrastructure while you focus on what matters most - growing your business.
             </p>
-            <button className="bg-green-600 text-white px-8 py-4 rounded-2xl font-semibold hover:bg-green-700 transition-colors">
-              View Open Positions
-            </button>
+            <a
+              href="https://calendly.com/emailverse/consultation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-600 text-white px-8 py-4 rounded-2xl font-semibold hover:bg-green-700 transition-colors inline-block"
+            >
+              Schedule Free Consultation
+            </a>
           </div>
         </div>
       </div>
