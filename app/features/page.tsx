@@ -1,7 +1,6 @@
 import FeaturesHero from '@/components/features/FeaturesHero'
 import FeaturesList from '@/components/features/FeaturesList'
 import IntegrationsSection from '@/components/features/IntegrationsSection'
-import PricingPreview from '@/components/features/PricingPreview'
 
 export const metadata = {
   title: 'Features - EmailVerse | Advanced Email Marketing Tools',
@@ -14,7 +13,6 @@ export default function FeaturesPage() {
       <FeaturesHero />
       <FeaturesList />
       <IntegrationsSection />
-      <PricingPreview />
     </div>
   )
 }

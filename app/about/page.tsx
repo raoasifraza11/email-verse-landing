@@ -1,37 +1,6 @@
-import { Users, Target, Award, Heart, Linkedin, Twitter } from 'lucide-react'
+import { Users, Target, Award, Heart } from 'lucide-react'
 
 export default function AboutPage() {
-  const team = [
-    {
-      name: 'Sarah Johnson',
-      role: 'CEO & Founder',
-      bio: 'Former VP of Marketing at TechCorp with 15+ years in email marketing',
-      image: '👩‍💼',
-      social: { linkedin: '#', twitter: '#' }
-    },
-    {
-      name: 'Michael Chen',
-      role: 'CTO',
-      bio: 'Ex-Google engineer specializing in scalable marketing platforms',
-      image: '👨‍💻',
-      social: { linkedin: '#', twitter: '#' }
-    },
-    {
-      name: 'Emily Rodriguez',
-      role: 'Head of Product',
-      bio: 'Product leader with expertise in user experience and growth',
-      image: '👩‍🎨',
-      social: { linkedin: '#', twitter: '#' }
-    },
-    {
-      name: 'David Kim',
-      role: 'Head of Engineering',
-      bio: 'Full-stack engineer passionate about building reliable systems',
-      image: '👨‍🔧',
-      social: { linkedin: '#', twitter: '#' }
-    }
-  ]
-
   const values = [
     {
       icon: Users,
@@ -135,33 +104,6 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{value.title}</h3>
                 <p className="text-gray-600">{value.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Team */}
-      <div className="bg-gray-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Meet Our Team
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member) => (
-              <div key={member.name} className="bg-white rounded-2xl p-6 shadow-sm text-center">
-                <div className="text-6xl mb-4">{member.image}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">{member.name}</h3>
-                <p className="text-green-600 font-medium mb-3">{member.role}</p>
-                <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
-                <div className="flex justify-center space-x-3">
-                  <a href={member.social.linkedin} className="text-gray-400 hover:text-blue-600">
-                    <Linkedin className="h-5 w-5" />
-                  </a>
-                  <a href={member.social.twitter} className="text-gray-400 hover:text-blue-400">
-                    <Twitter className="h-5 w-5" />
-                  </a>
-                </div>
               </div>
             ))}
           </div>
