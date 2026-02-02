@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { ArrowLeft, Calendar, TrendingUp, Users, Mail, Target, CheckCircle } from 'lucide-react'
 
 export const metadata = {
-  title: 'TechFlow Solutions Case Study - EmailVerse',
-  description: 'How TechFlow Solutions generated 2,847 leads in 6 months with 580% ROI using EmailVerse email marketing automation.',
+  title: 'Pitch-Capital Case Study - EmailVerse',
+  description: 'How Pitch-Capital generated 1,018 leads in 7 months with 580% ROI using EmailVerse email marketing automation.',
 }
 
 export default function TechFlowCaseStudy() {
@@ -30,18 +30,18 @@ export default function TechFlowCaseStudy() {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                TechFlow Solutions
+                Pitch-Capital
               </h1>
               
               <p className="text-xl mb-8 opacity-90">
                 How a B2B SaaS company transformed their lead generation with automated email outreach, 
-                generating 2,847 qualified leads in just 6 months.
+                generating 1,018 qualified leads in just 7 months.
               </p>
 
               <div className="flex items-center space-x-6">
                 <div className="flex items-center">
                   <Calendar className="h-5 w-5 mr-2" />
-                  <span>6 Month Campaign</span>
+                  <span>7 Month Campaign</span>
                 </div>
                 <div className="flex items-center">
                   <Users className="h-5 w-5 mr-2" />
@@ -54,7 +54,7 @@ export default function TechFlowCaseStudy() {
               <h3 className="text-2xl font-bold mb-6">Campaign Results</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">2,847</div>
+                  <div className="text-3xl font-bold mb-2">1,018</div>
                   <div className="text-sm opacity-90">Qualified Leads</div>
                 </div>
                 <div className="text-center">
@@ -87,7 +87,7 @@ export default function TechFlowCaseStudy() {
                   Low Conversion from Manual Outreach
                 </h3>
                 <p className="text-red-700">
-                  TechFlow Solutions was struggling with manual email outreach that yielded poor results. 
+                  Pitch-Capital was struggling with manual email outreach that yielded poor results. 
                   Their sales team was spending 60% of their time on prospecting with minimal success.
                 </p>
               </div>
@@ -192,22 +192,22 @@ export default function TechFlowCaseStudy() {
             <div className="flex items-center">
               <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">1</div>
               <div>
-                <h4 className="font-semibold text-gray-900">Week 1-2: Setup & Integration</h4>
-                <p className="text-gray-600">Platform setup, CRM integration, and initial prospect list building</p>
+                <h4 className="font-semibold text-gray-900">Week 1: Setup & Integration</h4>
+                <p className="text-gray-600">Platform setup, CRM integration, Warming (14 days minimum)</p>
               </div>
             </div>
             <div className="flex items-center">
               <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">2</div>
               <div>
-                <h4 className="font-semibold text-gray-900">Week 3-4: Campaign Creation</h4>
-                <p className="text-gray-600">Email sequence development, personalization setup, and testing</p>
+                <h4 className="font-semibold text-gray-900">Week 2: Campaign Creation & List building</h4>
+                <p className="text-gray-600">Email Sequence development, Personalization setup, Initial Prospect list building & testing.</p>
               </div>
             </div>
             <div className="flex items-center">
               <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">3</div>
               <div>
-                <h4 className="font-semibold text-gray-900">Week 5-8: Launch & Optimization</h4>
-                <p className="text-gray-600">Campaign launch, performance monitoring, and continuous optimization</p>
+                <h4 className="font-semibold text-gray-900">Week 3: Launch & Optimization</h4>
+                <p className="text-gray-600">Campaign Launch, Performance Monitoring, Gradual speed increment & continuous Optimization:</p>
               </div>
             </div>
           </div>
@@ -221,7 +221,7 @@ export default function TechFlowCaseStudy() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">2,847</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">1,018</div>
               <div className="text-sm text-blue-700">Qualified Leads Generated</div>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
@@ -246,7 +246,7 @@ export default function TechFlowCaseStudy() {
                   <CheckCircle className="h-6 w-6 text-green-500 mr-3 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">163% increase in lead generation</h4>
-                    <p className="text-gray-600">From 1,080 to 2,847 leads in 6 months</p>
+                    <p className="text-gray-600">From 387 to 1,018 leads in 7 months</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -299,7 +299,7 @@ export default function TechFlowCaseStudy() {
             Ready to Achieve Similar Results?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Let EmailVerse help you transform your lead generation like we did for TechFlow Solutions.
+            Let EmailVerse help you transform your lead generation like we did for Pitch-Capital.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 

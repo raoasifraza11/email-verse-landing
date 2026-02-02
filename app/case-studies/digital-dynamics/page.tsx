@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { ArrowLeft, Calendar, TrendingUp, Users, Mail, Target, CheckCircle, Zap } from 'lucide-react'
 
 export const metadata = {
-  title: 'Digital Dynamics Case Study - EmailVerse',
-  description: 'How Digital Dynamics generated 3,156 leads in 8 months with 650% ROI using EmailVerse to scale their marketing agency client acquisition.',
+  title: 'Content Dog Case Study - EmailVerse',
+  description: 'How Content Dog generated 655 leads in 4 months with 650% ROI using EmailVerse to scale their marketing agency client acquisition.',
 }
 
 export default function DigitalDynamicsCaseStudy() {
@@ -30,18 +30,18 @@ export default function DigitalDynamicsCaseStudy() {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Digital Dynamics
+                Content Dog
               </h1>
               
               <p className="text-xl mb-8 opacity-90">
                 How a marketing agency scaled their own client acquisition while serving existing clients, 
-                generating 3,156 qualified leads in 8 months with systematic outreach.
+                generating 655 qualified leads in 4 months with systematic outreach.
               </p>
 
               <div className="flex items-center space-x-6">
                 <div className="flex items-center">
                   <Calendar className="h-5 w-5 mr-2" />
-                  <span>8 Month Campaign</span>
+                  <span>4 Month Campaign</span>
                 </div>
                 <div className="flex items-center">
                   <Zap className="h-5 w-5 mr-2" />
@@ -54,7 +54,7 @@ export default function DigitalDynamicsCaseStudy() {
               <h3 className="text-2xl font-bold mb-6">Campaign Results</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">3,156</div>
+                  <div className="text-3xl font-bold mb-2">655</div>
                   <div className="text-sm opacity-90">Qualified Leads</div>
                 </div>
                 <div className="text-center">
@@ -87,7 +87,7 @@ export default function DigitalDynamicsCaseStudy() {
                   Scaling Client Acquisition While Serving Existing Clients
                 </h3>
                 <p className="text-red-700">
-                  Digital Dynamics was caught in the classic agency trap: too busy serving clients to 
+                  Content Dog was caught in the classic agency trap: too busy serving clients to 
                   focus on their own growth, leading to feast-or-famine revenue cycles.
                 </p>
               </div>
@@ -211,6 +211,31 @@ export default function DigitalDynamicsCaseStudy() {
               </div>
             </div>
           </div>
+
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 mt-12">Implementation Timeline</h3>
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">1</div>
+              <div>
+                <h4 className="font-semibold text-gray-900">Week 1: Setup & Integration</h4>
+                <p className="text-gray-600">Platform setup, CRM integration, Warming (14 days minimum)</p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">2</div>
+              <div>
+                <h4 className="font-semibold text-gray-900">Week 2: Campaign Creation & List building</h4>
+                <p className="text-gray-600">Email Sequence development, Personalization setup, Initial Prospect list building & testing.</p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">3</div>
+              <div>
+                <h4 className="font-semibold text-gray-900">Week 3: Launch & Optimization</h4>
+                <p className="text-gray-600">Campaign Launch, Performance Monitoring, Gradual speed increment & continuous Optimization:</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -221,7 +246,7 @@ export default function DigitalDynamicsCaseStudy() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">3,156</div>
+              <div className="text-3xl font-bold text-purple-600 mb-2">655</div>
               <div className="text-sm text-purple-700">Qualified Leads Generated</div>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
@@ -246,7 +271,7 @@ export default function DigitalDynamicsCaseStudy() {
                   <CheckCircle className="h-6 w-6 text-green-500 mr-3 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">420% increase in qualified leads</h4>
-                    <p className="text-gray-600">From 750 to 3,156 leads in 8 months</p>
+                    <p className="text-gray-600">From 126 to 655 leads in 4 months</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -296,7 +321,7 @@ export default function DigitalDynamicsCaseStudy() {
       <section className="section-padding bg-gradient-to-r from-primary-600 to-secondary-600">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Scale Your Agency Like Digital Dynamics
+            Scale Your Agency Like Content Dog
           </h2>
           <p className="text-xl mb-8 opacity-90">
             Let EmailVerse help you automate your client acquisition while you focus on delivery.

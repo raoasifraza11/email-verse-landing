@@ -35,7 +35,7 @@ export default function ECommercePlusCaseStudy() {
               
               <p className="text-xl mb-8 opacity-90">
                 How an e-commerce platform transformed customer retention and upselling, 
-                generating 4,231 qualified leads in 6 months with automated lifecycle marketing.
+                generating 887 qualified leads in 6 months with automated lifecycle marketing.
               </p>
 
               <div className="flex items-center space-x-6">
@@ -54,7 +54,7 @@ export default function ECommercePlusCaseStudy() {
               <h3 className="text-2xl font-bold mb-6">Campaign Results</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">4,231</div>
+                  <div className="text-3xl font-bold mb-2">887</div>
                   <div className="text-sm opacity-90">Qualified Leads</div>
                 </div>
                 <div className="text-center">
@@ -82,7 +82,7 @@ export default function ECommercePlusCaseStudy() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">4,231</div>
+              <div className="text-3xl font-bold text-indigo-600 mb-2">887</div>
               <div className="text-sm text-indigo-700">Qualified Leads Generated</div>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
@@ -107,7 +107,7 @@ export default function ECommercePlusCaseStudy() {
                   <CheckCircle className="h-6 w-6 text-green-500 mr-3 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">385% increase in qualified leads</h4>
-                    <p className="text-gray-600">From 870 to 4,231 leads in 6 months</p>
+                    <p className="text-gray-600">From 183 to 887 leads in 6 months</p>
                   </div>
                 </div>
                 <div className="flex items-start">

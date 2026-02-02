@@ -35,7 +35,7 @@ export default function FinTechProCaseStudy() {
               
               <p className="text-xl mb-8 opacity-90">
                 How a financial technology company achieved compliant email marketing success, 
-                generating 1,567 qualified enterprise leads in 7 months.
+                generating 941 qualified enterprise leads in 7 months.
               </p>
 
               <div className="flex items-center space-x-6">
@@ -54,7 +54,7 @@ export default function FinTechProCaseStudy() {
               <h3 className="text-2xl font-bold mb-6">Campaign Results</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">1,567</div>
+                  <div className="text-3xl font-bold mb-2">941</div>
                   <div className="text-sm opacity-90">Qualified Leads</div>
                 </div>
                 <div className="text-center">
@@ -82,7 +82,7 @@ export default function FinTechProCaseStudy() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">1,567</div>
+              <div className="text-3xl font-bold text-orange-600 mb-2">941</div>
               <div className="text-sm text-orange-700">Qualified Leads Generated</div>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
@@ -107,7 +107,7 @@ export default function FinTechProCaseStudy() {
                   <CheckCircle className="h-6 w-6 text-green-500 mr-3 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">312% increase in qualified leads</h4>
-                    <p className="text-gray-600">From 380 to 1,567 leads in 7 months</p>
+                    <p className="text-gray-600">From 228 to 941 leads in 7 months</p>
                   </div>
                 </div>
                 <div className="flex items-start">

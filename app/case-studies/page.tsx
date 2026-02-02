@@ -9,12 +9,12 @@ export const metadata = {
 const caseStudies = [
   {
     id: 'techflow-solutions',
-    company: 'TechFlow Solutions',
+    company: 'Pitch-Capital',
     industry: 'SaaS',
     challenge: 'Low lead conversion from cold outreach',
     results: {
-      leads: '2,847',
-      timeframe: '6 months',
+      leads: '1,018',
+      timeframe: '7 months',
       roi: '580%',
       openRate: '47.2%'
     },
@@ -24,12 +24,12 @@ const caseStudies = [
   },
   {
     id: 'realty-masters',
-    company: 'Realty Masters',
+    company: 'Generational',
     industry: 'Real Estate',
     challenge: 'Inconsistent lead generation',
     results: {
-      leads: '1,234',
-      timeframe: '4 months',
+      leads: '750',
+      timeframe: '3 months',
       roi: '420%',
       openRate: '52.8%'
     },
@@ -39,12 +39,12 @@ const caseStudies = [
   },
   {
     id: 'digital-dynamics',
-    company: 'Digital Dynamics',
+    company: 'Content Dog',
     industry: 'Marketing Agency',
     challenge: 'Scaling client acquisition',
     results: {
-      leads: '3,156',
-      timeframe: '8 months',
+      leads: '655',
+      timeframe: '4 months',
       roi: '650%',
       openRate: '44.9%'
     },
@@ -58,7 +58,7 @@ const caseStudies = [
     industry: 'Healthcare Technology',
     challenge: 'Complex B2B sales cycle',
     results: {
-      leads: '892',
+      leads: '823',
       timeframe: '5 months',
       roi: '380%',
       openRate: '41.3%'
@@ -73,7 +73,7 @@ const caseStudies = [
     industry: 'Financial Technology',
     challenge: 'Regulatory compliance in outreach',
     results: {
-      leads: '1,567',
+      leads: '941',
       timeframe: '7 months',
       roi: '490%',
       openRate: '39.7%'
@@ -88,7 +88,7 @@ const caseStudies = [
     industry: 'E-commerce',
     challenge: 'Customer retention and upselling',
     results: {
-      leads: '4,231',
+      leads: '887',
       timeframe: '6 months',
       roi: '720%',
       openRate: '48.6%'
@@ -123,7 +123,7 @@ export default function CaseStudiesPage() {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary-600 mb-2">13,927</div>
+              <div className="text-3xl font-bold text-primary-600 mb-2">5,074</div>
               <div className="text-gray-600">Total Leads Generated</div>
             </div>
             <div className="text-center">

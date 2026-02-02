@@ -70,12 +70,11 @@ const IntegrationsSection = () => {
           </div>
           
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Connect EmailVerse with Your Favorite Tools
+            At EmailVerse We Don't Just Connect Tools. We Run Them.
           </h2>
           
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Seamlessly integrate with the tools you already use. 
-            Our extensive integration library ensures EmailVerse fits perfectly into your workflow.
+            We bring the strategy, the experts, and the execution—so your tools finally deliver results.
           </p>
         </div>
 
@@ -136,66 +135,6 @@ const IntegrationsSection = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* API Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Powerful API for Custom Integrations
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Need a custom integration? Our RESTful API and webhooks make it easy to 
-              connect EmailVerse with any system. Complete documentation and SDKs available.
-            </p>
-            
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
-                <span className="text-gray-700">RESTful API with full CRUD operations</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
-                <span className="text-gray-700">Real-time webhooks for instant updates</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
-                <span className="text-gray-700">SDKs for popular programming languages</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
-                <span className="text-gray-700">Comprehensive documentation & examples</span>
-              </li>
-            </ul>
-            
-            <div className="flex space-x-4">
-              <button className="btn-primary">
-                View API Docs
-              </button>
-              <button className="btn-secondary">
-                Request Integration
-              </button>
-            </div>
-          </div>
-          
-          <div className="bg-gray-900 rounded-lg p-6 text-green-400 font-mono text-sm overflow-x-auto">
-            <div className="mb-4 text-gray-400">// Example API call</div>
-            <div className="space-y-2">
-              <div><span className="text-blue-400">POST</span> /api/v1/campaigns</div>
-              <div className="text-gray-400">{`{`}</div>
-              <div className="ml-4">"name": "Welcome Series",</div>
-              <div className="ml-4">"subject": "Welcome to EmailVerse!",</div>
-              <div className="ml-4">"template_id": "welcome-001",</div>
-              <div className="ml-4">"audience_id": "new-subscribers"</div>
-              <div className="text-gray-400">{`}`}</div>
-              <div className="mt-4 text-gray-400">// Response</div>
-              <div className="text-gray-400">{`{`}</div>
-              <div className="ml-4">"id": "camp_123456",</div>
-              <div className="ml-4">"status": "created",</div>
-              <div className="ml-4">"scheduled_at": "2024-01-15T10:00:00Z"</div>
-              <div className="text-gray-400">{`}`}</div>
-            </div>
           </div>
         </div>
       </div>
