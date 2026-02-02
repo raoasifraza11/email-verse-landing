@@ -18,7 +18,6 @@ const Footer = () => {
     resources: [
       { name: 'Case Studies', href: '/case-studies' },
       { name: 'Statistics', href: '/statistics' },
-      { name: 'Status', href: '/status' },
     ],
     legal: [
       { name: 'Privacy Policy', href: '/privacy' },
