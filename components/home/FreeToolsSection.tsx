@@ -203,6 +203,30 @@ const FreeToolsSection = () => {
                           <span>Try Free Tool</span>
                           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </a>
+                      ) : tool.id === 1 ? (
+                        <a 
+                          href="/subject-line-optimizer"
+                          className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
+                            activeTool === index 
+                              ? 'text-primary-700' 
+                              : 'text-primary-600 hover:text-primary-700'
+                          }`}
+                        >
+                          <span>Try Free Tool</span>
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </a>
+                      ) : activeTool === 0 ? (
+                        <a 
+                          href="/ai-email-builder"
+                          className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
+                            activeTool === index 
+                              ? 'text-primary-700' 
+                              : 'text-primary-600 hover:text-primary-700'
+                          }`}
+                        >
+                          <span>Try Free Tool</span>
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </a>
                       ) : (
                         <button className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
                           activeTool === index 
@@ -344,6 +368,22 @@ const FreeToolsSection = () => {
                   ) : activeTool === 3 ? (
                     <a 
                       href="/roi-calculator"
+                      className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Try Now</span>
+                    </a>
+                  ) : activeTool === 1 ? (
+                    <a 
+                      href="/subject-line-optimizer"
+                      className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Try Now</span>
+                    </a>
+                  ) : activeTool === 0 ? (
+                    <a 
+                      href="/ai-email-builder"
                       className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
                     >
                       <Eye className="h-4 w-4" />

@@ -299,48 +299,56 @@ const ROICalculator = () => {
     const sequences = parseInt(data.sequences) || 3
     const productPrice = parseFloat(data.productPrice) || 300
     
-    // Calculate domains and costs
+    // Use the improved logic from HTML version
     const totalEmailsPerDay = emailsPerDay * sequences
     const domainsNeeded = Math.ceil(totalEmailsPerDay / 60)
-    
-    const warmingCost = domainsNeeded * 19
+    let warmingCost = domainsNeeded * 19 // Premium warming
     const domainCostYearly = domainsNeeded * 10
-    const vpsCost = domainsNeeded * 5
-    
-    let apiCost = 250
-    if (emailsPerDay >= 100 && emailsPerDay <= 500) apiCost = 100
-    else if (emailsPerDay >= 501 && emailsPerDay <= 1000) apiCost = 150
-    else if (emailsPerDay >= 1001 && emailsPerDay <= 2000) apiCost = 250
-    else if (emailsPerDay >= 2001 && emailsPerDay <= 3000) apiCost = 320
-    else if (emailsPerDay >= 3001 && emailsPerDay <= 4000) apiCost = 500
-    else if (emailsPerDay >= 4001) apiCost = 600
-    
-    let toolCost = 97
-    if (data.platform === 'smartlead') toolCost = 94
-    else if (data.platform === 'mailwizz') toolCost = 90
-    
-    const configCost = emailsPerDay >= 2001 ? 300 : 200
+    const vpsCount = domainsNeeded
+    const vpsCost = vpsCount * 5
+
+    // API Cost based on premium mailboxes choice
+    let apiCost = 100 // Premium mailboxes
+
+    let toolCost = 0
+    if (data.platform === "instantly") toolCost = 97
+    else if (data.platform === "smartlead") toolCost = 94
+    else if (data.platform === "mailwizz") toolCost = 90
+    else toolCost = 97 // Default to Instantly
+
+    // Updated management cost structure
+    let configCost = 0
+    if (emailsPerDay >= 100 && emailsPerDay <= 1000) {
+      configCost = 100
+    } else if (emailsPerDay >= 1001 && emailsPerDay <= 3000) {
+      configCost = 200
+    } else if (emailsPerDay >= 3001) {
+      configCost = 300
+    }
+
     const totalMonthlyCost = vpsCost + warmingCost + apiCost + toolCost + configCost
-    
-    // Calculate projections
+
+    // Calculate ROI metrics
     const weeksPerMonth = 4.33
     const uniqueVolume = emailsPerDay * 5 * weeksPerMonth
     const totalVolume = uniqueVolume * sequences
-    
-    // Industry-specific calculations
-    const industryRates: { [key: string]: { open: number, reply: number, positive: number } } = {
-      saas: { open: 0.48, reply: 0.03, positive: sequences <= 3 ? 0.05 : 0.11 },
-      realestate: { open: 0.22, reply: 0.03, positive: sequences <= 3 ? 0.05 : 0.11 },
-      leadgenerationsoftware: { open: 0.41, reply: 0.03, positive: sequences <= 3 ? 0.05 : 0.11 },
-      finance: { open: 0.39, reply: 0.03, positive: sequences <= 3 ? 0.05 : 0.11 },
-      fintech: { open: 0.38, reply: 0.03, positive: sequences <= 3 ? 0.05 : 0.11 }
+
+    const industryRates: Record<string, number> = {
+      saas: 0.48,
+      software: 0.26,
+      finance: 0.39,
+      fintech: 0.38,
+      realestate: 0.22,
+      podcast: 0.43,
+      leadgenerationsoftware: 0.41
     }
-    
-    const rates = industryRates[data.niche] || industryRates.saas
-    const opens = Math.round(uniqueVolume * rates.open)
-    const replies = Math.round(opens * rates.reply)
-    const positives = Math.round(replies * rates.positive)
-    
+
+    const openRate = industryRates[data.niche] || industryRates.saas
+    const opens = Math.round(uniqueVolume * openRate)
+    const replyRate = sequences >= 3 ? 0.06 : 0.04
+    const replies = Math.round(opens * replyRate)
+    const positiveRate = sequences >= 3 ? 0.35 : 0.20
+    const positives = Math.round(replies * positiveRate)
     const monthlyRevenue = positives * productPrice
     const annualRevenue = monthlyRevenue * 12
     const monthlyProfit = monthlyRevenue - totalMonthlyCost
@@ -525,6 +533,7 @@ const ROICalculator = () => {
             </div>
           </div>
 
+          {/* Key Metrics Grid */}
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-lg border border-green-200">
               <div className="flex items-center space-x-2 mb-3">
@@ -546,10 +555,11 @@ const ROICalculator = () => {
             </div>
           </div>
 
+          {/* ROI Highlight */}
           <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-lg border border-purple-200">
             <div className="flex items-center space-x-2 mb-3">
               <Zap className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-purple-800">ROI</span>
+              <span className="text-sm font-medium text-purple-800">Return on Investment</span>
             </div>
             <div className="text-3xl font-bold text-purple-700">
               {results.roiPercent.toFixed(1)}%
@@ -557,6 +567,30 @@ const ROICalculator = () => {
             <div className="text-sm text-purple-600">Monthly return</div>
           </div>
 
+          {/* Infrastructure Summary */}
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h5 className="font-semibold text-gray-800 mb-3 text-sm">Infrastructure Summary</h5>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <div className="text-gray-600">Domains Needed</div>
+                <div className="font-semibold">{results.domainsNeeded}</div>
+              </div>
+              <div>
+                <div className="text-gray-600">Total Monthly Cost</div>
+                <div className="font-semibold">{formatCurrency(results.totalMonthlyCost)}</div>
+              </div>
+              <div>
+                <div className="text-gray-600">VPS Cost</div>
+                <div className="font-semibold">{formatCurrency(results.vpsCost)}</div>
+              </div>
+              <div>
+                <div className="text-gray-600">Tool Cost</div>
+                <div className="font-semibold">{formatCurrency(results.toolCost)}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Performance Metrics */}
           <div className="grid grid-cols-3 gap-3 text-center">
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="text-lg font-bold text-gray-700">{formatNumber(results.opens)}</div>
@@ -572,6 +606,13 @@ const ROICalculator = () => {
             </div>
           </div>
 
+          {/* Annual Projection */}
+          <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 rounded-lg text-center">
+            <div className="text-sm opacity-90 mb-1">Annual Profit Projection</div>
+            <div className="text-2xl font-bold">{formatCurrency(results.annualProfit)}</div>
+          </div>
+
+          {/* Action Buttons */}
           <div className="flex space-x-3">
             <button
               onClick={resetCalculator}
@@ -585,7 +626,7 @@ const ROICalculator = () => {
               rel="noopener noreferrer"
               className="flex-1 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-medium py-3 px-4 rounded-lg transition-all text-center text-sm"
             >
-              Start Growing Your Leads Now
+              Get Started
             </a>
           </div>
         </div>
