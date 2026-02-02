@@ -1,6 +1,5 @@
 import FeaturesHero from '@/components/features/FeaturesHero'
 import FeaturesList from '@/components/features/FeaturesList'
-import ComparisonTable from '@/components/features/ComparisonTable'
 import IntegrationsSection from '@/components/features/IntegrationsSection'
 import PricingPreview from '@/components/features/PricingPreview'
 
@@ -14,7 +13,6 @@ export default function FeaturesPage() {
     <div className="min-h-screen">
       <FeaturesHero />
       <FeaturesList />
-      <ComparisonTable />
       <IntegrationsSection />
       <PricingPreview />
     </div>
