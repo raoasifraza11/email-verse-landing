@@ -3,10 +3,24 @@
 import { useState } from 'react'
 import { Shield, AlertTriangle, CheckCircle, Mail, BarChart3, Target, Zap } from 'lucide-react'
 
+interface SpamCheckResult {
+  highlightedSubject: string
+  highlightedEmail: string
+  score: number
+  scoreColor: string
+  bgColor: string
+  feedbackText: string
+  subjectLength: string
+  wordCount: string
+  linkCount: string
+  spamWordCount: string
+  suggestions: string[]
+}
+
 export default function SpamCheckerPage() {
   const [subjectLine, setSubjectLine] = useState('')
   const [emailContent, setEmailContent] = useState('')
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<SpamCheckResult | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   // Word lists from the provided code
@@ -16,9 +30,9 @@ export default function SpamCheckerPage() {
 
   const exaggeratedWords = ["$","#1","%","% free","% Satisfied","0%","0% risk","100%","100% free","100% more","100% off","100% satisfied","90%","99%","Access for free","Additional income","Amazed","Please","perfect","Amazing","Amazing offer","Amazing stuff","Be amazed","Be surprised","Be your own boss","Believe me","Best bargain","Best deal","Best offer","Best price","Best rates","Big bucks","Billion","Billion Dollars","Bonus","Boss","Can't live without","Cancel","Cash","Cash bonus","Cashcashcash","Consolidate debt","Double your","Double your cash","Double your income","Drastically reduced","Earn","Earn $","Earn Cash","Earn extra cash","Earn money","Earn per week","Eliminate bad credit","Expect to earn","Extra","Extra cash","Extra income","Fantastic","Fantastic deal","Fantastic offer","FAST","Fast cash","Financial freedom","Free access","Free consultation","Free gift","Free hosting","Free info","Free investment","Free membership","Free money","Free preview","Free quote","Free trial","Full refund","Get out of debt","Get paid","Giveaway","Guaranteed","Income","Income from home","Increase sales","Increase traffic","Incredible deal","Join billions","Join millions","Join millions of Americans","Join thousands","Lower monthly payments","Lower rates","Lowest price","Make $","Make money","Million","Million dollars","Money back","Money making","Month trial offer","More Internet Traffic","Multilevel marketing","No gimmicks","Number one","Once in a lifetime","One hundred percent guaranteed","One time","Pennies a day","Potential earnings","Prize","Promise","Pure profit","Risk-free","Satisfaction guaranteed","Save big money","Save up to","Serious cash","Special promotion","The best","Thousands","Unbeatable offer","Unbelievable","Unlimited","Unlimited trial","Warranty","Web traffic","Work from home"]
 
-  const combinedTerms = []
+  const combinedTerms: { term: string; category: string }[] = []
   
-  const addTerms = (list, category) => {
+  const addTerms = (list: string[], category: string) => {
     list.forEach(term => {
       combinedTerms.push({ term, category })
     })
@@ -44,13 +58,13 @@ export default function SpamCheckerPage() {
 
   const combinedRegex = new RegExp(patternParts.join("|"), "gi")
 
-  const normalize = (text) => {
+  const normalize = (text: string): string => {
     return text.toLowerCase().replace(/[\s\-]+/g, "")
   }
 
-  const getCategory = (match) => {
+  const getCategory = (match: string): string => {
     const normMatch = normalize(match)
-    for (let item of combinedTerms) {
+    for (const item of combinedTerms) {
       if (normalize(item.term) === normMatch) {
         return item.category
       }
@@ -58,8 +72,8 @@ export default function SpamCheckerPage() {
     return ""
   }
 
-  const highlightText = (text) => {
-    return text.replace(combinedRegex, function(match) {
+  const highlightText = (text: string): string => {
+    return text.replace(combinedRegex, function(match: string) {
       const category = getCategory(match)
       return `<span class="${category}">${match}</span>`
     })
@@ -78,13 +92,13 @@ export default function SpamCheckerPage() {
       const highlightedEmail = highlightText(emailContent)
 
       // Count spam words
-      const matches = emailContent.match(combinedRegex) || []
-      const subjectMatches = subjectLine.match(combinedRegex) || []
+      const matches: string[] = emailContent.match(combinedRegex) || []
+      const subjectMatches: string[] = subjectLine.match(combinedRegex) || []
       const totalSpamWords = matches.length + subjectMatches.length
 
       // Count per category
       let countShady = 0, countUrgency = 0, countExaggerated = 0
-      matches.concat(subjectMatches).forEach(match => {
+      ;[...matches, ...subjectMatches].forEach(match => {
         const category = getCategory(match)
         if (category === "shady") countShady++
         else if (category === "urgency") countUrgency++
@@ -129,7 +143,7 @@ export default function SpamCheckerPage() {
       else linkCountText += " ✅ (Good)"
 
       // Generate suggestions
-      const suggestions = []
+      const suggestions: string[] = []
       if (subjectWords.length > 5) {
         suggestions.push("Consider shortening your subject line.")
       } else if (subjectWords.length < 3) {
@@ -317,7 +331,7 @@ export default function SpamCheckerPage() {
                         '--shady-color': '#6b7280',
                         '--urgency-color': '#dc2626', 
                         '--exaggerated-color': '#f59e0b'
-                      }}
+                      } as React.CSSProperties}
                     />
                   </div>
                 )}
