@@ -20,7 +20,12 @@ export default function TermsPage() {
     {
       icon: CreditCard,
       title: 'Payment Terms',
-      content: 'Subscription fees are billed in advance on a monthly or annual basis. All fees are non-refundable except as required by law. We reserve the right to change our pricing with 30 days notice.'
+      content: 'Subscription fees are billed in advance on a monthly basis. All fees are non-refundable except as required by law. We reserve the right to change our pricing with 30 days notice.'
+    },
+    {
+      icon: AlertTriangle,
+      title: 'Refund Policy',
+      content: 'Our digital marketing services operate on a month-to-month basis, providing flexibility for our clients without the burden of long-term contracts. While we strive to deliver exceptional results, it\'s important to note that our services are non-refundable. Clients are billed on a monthly basis, and cancellations can be made at any time without incurring additional charges for subsequent months. However, please be aware that no refunds or pro-rated reimbursements will be provided for the current billing cycle. By engaging with our services, clients acknowledge and accept the non-refundable nature of our offerings, appreciating the freedom to terminate the arrangement at their discretion without the constraints of a binding contract.'
     }
   ]
 
@@ -157,6 +162,25 @@ export default function TermsPage() {
             </ul>
           </div>
 
+          {/* GDPR & CAN-SPAM Compliance */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg mt-8">
+            <h2 className="text-2xl font-bold text-secondary-900 mb-6">GDPR & CAN-SPAM Compliance</h2>
+            
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-secondary-900 mb-3">CAN-SPAM Act</h3>
+              <p className="text-secondary-700 leading-relaxed">
+                By engaging with our digital marketing agency, you agree to comply with the CAN-SPAM Act and other relevant legislation governing electronic communication. We strictly prohibit the use of our services for any illegal emailing activities, including but not limited to spamming, phishing, and the dissemination of malicious content. Our clients must ensure that all email campaigns adhere to the guidelines set forth by the CAN-SPAM Act, which includes providing clear and accurate information in the sender's identification, offering recipients the option to opt-out, and refraining from the use of deceptive subject lines. Failure to adhere to these terms may result in the termination of our services and legal action. We are committed to maintaining ethical and lawful digital marketing practices and expect our clients to do the same.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-secondary-900 mb-3">GDPR Compliance</h3>
+              <p className="text-secondary-700 leading-relaxed">
+                We are committed to protecting your privacy and ensuring compliance with the General Data Protection Regulation (GDPR). We process personal data lawfully, fairly, and transparently, and only for specified, explicit, and legitimate purposes. You have the right to access, rectify, erase, restrict processing, data portability, and object to processing of your personal data. For more information about how we handle your data, please refer to our Privacy Policy.
+              </p>
+            </div>
+          </div>
+
           {/* Contact Information */}
           <div className="bg-white rounded-2xl p-8 shadow-lg mt-8">
             <h2 className="text-2xl font-bold text-secondary-900 mb-4">Questions About These Terms?</h2>
@@ -164,9 +188,8 @@ export default function TermsPage() {
               If you have any questions about these Terms of Service, please contact us:
             </p>
             <div className="space-y-2 text-secondary-700">
-              <p><strong>Email:</strong> legal@emailverse.com</p>
-              <p><strong>Address:</strong> 123 Tech Street, San Francisco, CA 94105</p>
-              <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+              <p><strong>Email:</strong> hello@email-verse.com</p>
+              <p><strong>Phone:</strong> +1 406-405-2711</p>
             </div>
           </div>
         </div>
