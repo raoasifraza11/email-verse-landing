@@ -299,16 +299,22 @@ const ROICalculator = () => {
     const sequences = parseInt(data.sequences) || 3
     const productPrice = parseFloat(data.productPrice) || 300
     
-    // Use the improved logic from HTML version
+    // More realistic domain calculation - 30 emails per domain per day (industry standard)
     const totalEmailsPerDay = emailsPerDay * sequences
-    const domainsNeeded = Math.ceil(totalEmailsPerDay / 60)
-    let warmingCost = domainsNeeded * 19 // Premium warming
-    const domainCostYearly = domainsNeeded * 10
-    const vpsCount = domainsNeeded
-    const vpsCost = vpsCount * 5
-
-    // API Cost based on premium mailboxes choice
-    let apiCost = 100 // Premium mailboxes
+    const domainsNeeded = Math.ceil(totalEmailsPerDay / 30)
+    
+    // Cost calculations
+    const warmingCost = domainsNeeded * 15 // More realistic warming cost
+    const domainCostMonthly = Math.ceil(domainsNeeded * 12 / 12) // $12/year per domain = $1/month
+    const vpsCount = Math.ceil(domainsNeeded / 10) // 1 VPS can handle 10 domains
+    const vpsCost = vpsCount * 8 // More realistic VPS cost
+    
+    // API Cost based on email volume (more realistic pricing)
+    let apiCost = 0
+    if (totalEmailsPerDay <= 1000) apiCost = 50
+    else if (totalEmailsPerDay <= 3000) apiCost = 100
+    else if (totalEmailsPerDay <= 5000) apiCost = 150
+    else apiCost = 200
 
     let toolCost = 0
     if (data.platform === "instantly") toolCost = 97
@@ -316,7 +322,7 @@ const ROICalculator = () => {
     else if (data.platform === "mailwizz") toolCost = 90
     else toolCost = 97 // Default to Instantly
 
-    // Updated management cost structure
+    // Management cost structure (unchanged as it's reasonable)
     let configCost = 0
     if (emailsPerDay >= 100 && emailsPerDay <= 1000) {
       configCost = 100
@@ -326,29 +332,37 @@ const ROICalculator = () => {
       configCost = 300
     }
 
-    const totalMonthlyCost = vpsCost + warmingCost + apiCost + toolCost + configCost
+    const totalMonthlyCost = vpsCost + warmingCost + apiCost + toolCost + configCost + domainCostMonthly
 
-    // Calculate ROI metrics
-    const weeksPerMonth = 4.33
-    const uniqueVolume = emailsPerDay * 5 * weeksPerMonth
+    // More realistic ROI metrics
+    const workingDaysPerMonth = 22 // Business days
+    const uniqueVolume = emailsPerDay * workingDaysPerMonth
     const totalVolume = uniqueVolume * sequences
 
+    // More realistic industry open rates for cold email
     const industryRates: Record<string, number> = {
-      saas: 0.48,
-      software: 0.26,
-      finance: 0.39,
-      fintech: 0.38,
-      realestate: 0.22,
-      podcast: 0.43,
-      leadgenerationsoftware: 0.41
+      saas: 0.25,           // 25% (more realistic for cold email)
+      software: 0.22,       // 22%
+      finance: 0.20,        // 20% (finance is harder)
+      fintech: 0.23,        // 23%
+      realestate: 0.28,     // 28% (real estate responds better)
+      podcast: 0.26,        // 26%
+      leadgenerationsoftware: 0.24, // 24%
+      other: 0.23           // 23% default
     }
 
-    const openRate = industryRates[data.niche] || industryRates.saas
+    const openRate = industryRates[data.niche] || industryRates.other
     const opens = Math.round(uniqueVolume * openRate)
-    const replyRate = sequences >= 3 ? 0.06 : 0.04
+    
+    // More realistic reply rates (2-4% is industry standard for cold email)
+    const replyRate = sequences >= 4 ? 0.035 : sequences >= 3 ? 0.03 : 0.025
     const replies = Math.round(opens * replyRate)
-    const positiveRate = sequences >= 3 ? 0.35 : 0.20
+    
+    // More realistic positive rate (15-25% of replies are positive)
+    const positiveRate = sequences >= 4 ? 0.25 : sequences >= 3 ? 0.20 : 0.15
     const positives = Math.round(replies * positiveRate)
+    
+    // Revenue calculations
     const monthlyRevenue = positives * productPrice
     const annualRevenue = monthlyRevenue * 12
     const monthlyProfit = monthlyRevenue - totalMonthlyCost
@@ -357,7 +371,7 @@ const ROICalculator = () => {
     
     setResults({
       domainsNeeded,
-      domainCost: domainCostYearly,
+      domainCost: domainCostMonthly * 12, // Show annual domain cost
       vpsCost,
       warmingCost,
       apiCost,
@@ -576,8 +590,12 @@ const ROICalculator = () => {
                 <div className="font-semibold">{results.domainsNeeded}</div>
               </div>
               <div>
-                <div className="text-gray-600">Total Monthly Cost</div>
-                <div className="font-semibold">{formatCurrency(results.totalMonthlyCost)}</div>
+                <div className="text-gray-600">Domain Cost/Month</div>
+                <div className="font-semibold">{formatCurrency(results.domainCost / 12)}</div>
+              </div>
+              <div>
+                <div className="text-gray-600">Management Cost</div>
+                <div className="font-semibold">{formatCurrency(results.configCost)}</div>
               </div>
               <div>
                 <div className="text-gray-600">VPS Cost</div>
@@ -586,6 +604,18 @@ const ROICalculator = () => {
               <div>
                 <div className="text-gray-600">Tool Cost</div>
                 <div className="font-semibold">{formatCurrency(results.toolCost)}</div>
+              </div>
+              <div>
+                <div className="text-gray-600">Warming Cost</div>
+                <div className="font-semibold">{formatCurrency(results.warmingCost)}</div>
+              </div>
+              <div>
+                <div className="text-gray-600">API Cost</div>
+                <div className="font-semibold">{formatCurrency(results.apiCost)}</div>
+              </div>
+              <div>
+                <div className="text-gray-600 font-semibold">Total Monthly Cost</div>
+                <div className="font-bold text-primary-600">{formatCurrency(results.totalMonthlyCost)}</div>
               </div>
             </div>
           </div>

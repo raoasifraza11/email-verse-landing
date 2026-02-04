@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { 
@@ -10,9 +10,7 @@ import {
   Mail, 
   Target,
   Sparkles,
-  Calendar,
-  ArrowRight,
-  CheckCircle
+  Calendar
 } from 'lucide-react'
 
 interface ChatState {
@@ -31,6 +29,25 @@ interface Message {
   content: string
   isTyping?: boolean
 }
+
+interface BaseQuestion {
+  message: string
+  hint?: string
+  field: keyof ChatState
+}
+
+interface NumberQuestion extends BaseQuestion {
+  type: 'number'
+  validation: (val: number) => boolean
+  warning?: (val: number) => string | null
+}
+
+interface OptionsQuestion extends BaseQuestion {
+  type: 'options'
+  options: ((state: ChatState) => Array<{value: string, label: string, description: string}>) | (() => Array<{value: string, label: string, description: string}>)
+}
+
+type Question = NumberQuestion | OptionsQuestion
 
 interface ROIReport {
   domainsNeeded: number
@@ -78,8 +95,23 @@ export default function ROICalculator() {
   const [options, setOptions] = useState<Array<{value: string, label: string, description: string}>>([])
   const [isTyping, setIsTyping] = useState(false)
   const [report, setReport] = useState<ROIReport | null>(null)
+  
+  // Add ref for chat container
+  const chatContainerRef = useRef<HTMLDivElement>(null)
 
-  const questions = [
+  // Auto-scroll function
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    }
+  }
+
+  // Auto-scroll when messages change
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, isTyping])
+
+  const questions: Question[] = [
     {
       type: 'number' as const,
       message: "👋 Hello! I'm your AI ROI Assistant. Let's calculate your potential ROI together!\n\nHow many emails do you want to send per day?",
@@ -173,7 +205,7 @@ export default function ROICalculator() {
     const value = parseFloat(currentInput)
     const currentQuestion = questions[chatState.currentStep]
     
-    if (!value || !currentQuestion.validation(value)) {
+    if (!value || !currentQuestion || currentQuestion.type !== 'number' || !currentQuestion.validation(value)) {
       return
     }
 
@@ -229,7 +261,8 @@ export default function ROICalculator() {
         setInputType('number')
       } else if (question.type === 'options') {
         setInputType('options')
-        const opts = typeof question.options === 'function' ? question.options(newState) : question.options()
+        const optionsQuestion = question as OptionsQuestion
+        const opts = optionsQuestion.options(newState)
         setOptions(opts)
       }
     }, 1200)
@@ -255,18 +288,26 @@ export default function ROICalculator() {
   const calculateROI = (state: ChatState): ROIReport => {
     const { emailsPerDay, sequences, sendingTool, warmingPlan, premiumMailboxes, industry, productPrice } = state
 
-    // Calculate domains and costs
+    // More realistic domain calculation - 30 emails per domain per day (industry standard)
     const totalEmailsPerDay = (emailsPerDay || 0) * (sequences || 1)
-    const domainsNeeded = Math.ceil(totalEmailsPerDay / 60)
-    let warmingCost = warmingPlan === "premium" ? domainsNeeded * 19 : 0
-    const domainCostYearly = domainsNeeded * 10
-    const vpsCount = domainsNeeded
-    const vpsCostMonthly = vpsCount * 5
+    const domainsNeeded = Math.ceil(totalEmailsPerDay / 30)
+    
+    // More realistic warming cost
+    let warmingCost = warmingPlan === "premium" ? domainsNeeded * 15 : 0
+    const domainCostYearly = domainsNeeded * 12 // $12/year per domain
+    const domainCostMonthly = Math.ceil(domainCostYearly / 12)
+    
+    // More efficient VPS calculation - 1 VPS can handle 10 domains
+    const vpsCount = Math.ceil(domainsNeeded / 10)
+    const vpsCostMonthly = vpsCount * 8
 
-    // API Cost based on premium mailboxes choice
+    // Volume-based API Cost
     let apiCost = 0
     if (premiumMailboxes === 'yes') {
-      apiCost = 100
+      if (totalEmailsPerDay <= 1000) apiCost = 50
+      else if (totalEmailsPerDay <= 3000) apiCost = 100
+      else if (totalEmailsPerDay <= 5000) apiCost = 150
+      else apiCost = 200
     }
 
     let toolCost = 0
@@ -274,39 +315,47 @@ export default function ROICalculator() {
     else if (sendingTool === "smartlead") toolCost = 94
     else if (sendingTool === "mailwizz") toolCost = 90
 
-    // Updated management cost structure
+    // Management cost structure
     let configCost = 0
-    if (emailsPerDay && emailsPerDay >= 100 && emailsPerDay <= 1000) {
-      configCost = 100
-    } else if (emailsPerDay && emailsPerDay >= 1001 && emailsPerDay <= 3000) {
-      configCost = 200
-    } else if (emailsPerDay && emailsPerDay >= 3001) {
-      configCost = 300
+    if (emailsPerDay && emailsPerDay > 0) {
+      if (emailsPerDay <= 1000) {
+        configCost = 100
+      } else if (emailsPerDay <= 3000) {
+        configCost = 200
+      } else {
+        configCost = 300
+      }
     }
 
-    const totalMonthlyCost = vpsCostMonthly + warmingCost + apiCost + toolCost + configCost
+    const totalMonthlyCost = vpsCostMonthly + warmingCost + apiCost + toolCost + configCost + domainCostMonthly
 
-    // Calculate ROI metrics
-    const weeksPerMonth = 4.33
-    const uniqueVolume = (emailsPerDay || 0) * 5 * weeksPerMonth
+    // More realistic ROI metrics - use business days
+    const workingDaysPerMonth = 22
+    const uniqueVolume = (emailsPerDay || 0) * workingDaysPerMonth
     const totalVolume = uniqueVolume * (sequences || 1)
 
+    // More realistic industry open rates for cold email
     const industryRates: Record<string, number> = {
-      saas: 0.48,
-      software: 0.26,
-      finance: 0.39,
-      fintech: 0.38,
-      realestate: 0.22,
-      podcast: 0.43,
-      leadgen: 0.41
+      saas: 0.25,           // 25% (more realistic for cold email)
+      software: 0.22,       // 22%
+      finance: 0.20,        // 20% (finance is harder)
+      fintech: 0.23,        // 23%
+      realestate: 0.28,     // 28% (real estate responds better)
+      podcast: 0.26,        // 26%
+      leadgen: 0.24         // 24%
     }
 
-    const openRate = industryRates[industry || 'saas'] || 0.35
+    const openRate = industryRates[industry || 'saas'] || 0.23
     const opens = Math.round(uniqueVolume * openRate)
-    const replyRate = (sequences || 1) >= 3 ? 0.06 : 0.04
+    
+    // More realistic reply rates (2-4% is industry standard for cold email)
+    const replyRate = (sequences || 1) >= 4 ? 0.035 : (sequences || 1) >= 3 ? 0.03 : 0.025
     const replies = Math.round(opens * replyRate)
-    const positiveRate = (sequences || 1) >= 3 ? 0.35 : 0.20
+    
+    // More realistic positive rate (15-25% of replies are positive)
+    const positiveRate = (sequences || 1) >= 4 ? 0.25 : (sequences || 1) >= 3 ? 0.20 : 0.15
     const positives = Math.round(replies * positiveRate)
+    
     const monthlyRevenue = positives * (productPrice || 0)
     const annualRevenue = monthlyRevenue * 12
     const monthlyProfit = monthlyRevenue - totalMonthlyCost
@@ -382,38 +431,39 @@ export default function ROICalculator() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Chat Section */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-xl rounded-2xl">
-              <CardContent className="p-6">
-                <div className="h-96 overflow-y-auto mb-6 space-y-4" id="chatContainer">
-                  {messages.map((message, index) => (
-                    <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                      {message.isTyping ? (
-                        <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 rounded-2xl rounded-bl-sm max-w-xs">
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                            <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {!report ? (
+          // Original layout when no report
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Chat Section */}
+            <div className="lg:col-span-2">
+              <Card className="shadow-xl rounded-2xl">
+                <CardContent className="p-6">
+                  <div className="h-96 overflow-y-auto mb-6 space-y-4 scroll-smooth" ref={chatContainerRef} id="chatContainer">
+                    {messages.map((message, index) => (
+                      <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        {message.isTyping ? (
+                          <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 rounded-2xl rounded-bl-sm max-w-xs">
+                            <div className="flex space-x-1">
+                              <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                              <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                              <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className={`p-4 rounded-2xl max-w-xs lg:max-w-md whitespace-pre-line ${
-                          message.type === 'ai' 
-                            ? 'bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-bl-sm' 
-                            : 'bg-white text-gray-900 rounded-br-sm border border-gray-200'
-                        }`}>
-                          {message.content}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                        ) : (
+                          <div className={`p-4 rounded-2xl max-w-xs lg:max-w-md whitespace-pre-line ${
+                            message.type === 'ai' 
+                              ? 'bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-bl-sm' 
+                              : 'bg-white text-gray-900 rounded-br-sm border border-gray-200'
+                          }`}>
+                            {message.content}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
 
-                {/* Input Area */}
-                {!report && (
+                  {/* Input Area */}
                   <div className="space-y-4">
                     {inputType === 'number' ? (
                       <div className="flex space-x-3">
@@ -421,7 +471,7 @@ export default function ROICalculator() {
                           type="number"
                           value={currentInput}
                           onChange={(e) => setCurrentInput(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && handleNumberSubmit()}
+                          onKeyDown={(e) => e.key === 'Enter' && handleNumberSubmit()}
                           className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                           placeholder="Enter your answer..."
                           min="0"
@@ -449,26 +499,12 @@ export default function ROICalculator() {
                       </div>
                     )}
                   </div>
-                )}
+                </CardContent>
+              </Card>
+            </div>
 
-                {report && (
-                  <div className="mt-6">
-                    <Button
-                      onClick={resetCalculator}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      Calculate Another ROI
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Results Section */}
-          <div className="lg:col-span-1">
-            {!report ? (
+            {/* Sidebar when no report */}
+            <div className="lg:col-span-1">
               <Card className="shadow-xl rounded-2xl h-full">
                 <CardContent className="p-6 text-center">
                   <div className="w-20 h-20 bg-gradient-to-r from-green-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -492,158 +528,213 @@ export default function ROICalculator() {
                   </div>
                 </CardContent>
               </Card>
-            ) : (
-              <div className="space-y-6">
-                {/* ROI Summary Card */}
-                <Card className="shadow-xl rounded-2xl bg-gradient-to-r from-green-500 to-blue-600 text-white">
-                  <CardContent className="p-6">
-                    <div className="text-center mb-4">
-                      <div className="text-3xl mb-2">🎯</div>
-                      <h3 className="text-xl font-bold">Your ROI Summary</h3>
+            </div>
+          </div>
+        ) : (
+          // Full width layout when report is available
+          <div className="space-y-8">
+            {/* Full Width Chat Section */}
+            <Card className="shadow-xl rounded-2xl">
+              <CardContent className="p-6">
+                <div className="h-96 overflow-y-auto mb-6 space-y-4 scroll-smooth" ref={chatContainerRef} id="chatContainer">
+                  {messages.map((message, index) => (
+                    <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      {message.isTyping ? (
+                        <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 rounded-2xl rounded-bl-sm max-w-xs">
+                          <div className="flex space-x-1">
+                            <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                            <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className={`p-4 rounded-2xl max-w-xs lg:max-w-md whitespace-pre-line ${
+                          message.type === 'ai' 
+                            ? 'bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-bl-sm' 
+                            : 'bg-white text-gray-900 rounded-br-sm border border-gray-200'
+                        }`}>
+                          {message.content}
+                        </div>
+                      )}
                     </div>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold">{report.roiPercent}%</div>
-                        <div className="text-sm opacity-90">Monthly ROI</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold">${report.monthlyProfit.toLocaleString()}</div>
-                        <div className="text-sm opacity-90">Monthly Profit</div>
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-semibold">${report.annualProfit.toLocaleString()}</div>
-                      <div className="text-sm opacity-90">Annual Profit Projection</div>
-                    </div>
-                  </CardContent>
-                </Card>
+                  ))}
+                </div>
 
-                {/* Infrastructure Breakdown */}
-                <Card className="shadow-lg">
-                  <CardContent className="p-6">
-                    <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                <div className="mt-6">
+                  <Button
+                    onClick={resetCalculator}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Calculate Another ROI
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Horizontal Results Dashboard at Bottom */}
+            <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+              {/* Header Section */}
+              <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">🎯</div>
+                  <h2 className="text-3xl font-bold mb-2">Your ROI Analysis Results</h2>
+                  <p className="text-lg opacity-90">Complete breakdown of your email marketing potential</p>
+                </div>
+              </div>
+
+              {/* Main Results Grid */}
+              <div className="p-8">
+                {/* Top Row - Key Metrics */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-green-600 mb-1">{report.roiPercent}%</div>
+                      <div className="text-sm font-medium text-green-700">Monthly ROI</div>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-blue-600 mb-1">${report.monthlyProfit.toLocaleString()}</div>
+                      <div className="text-sm font-medium text-blue-700">Monthly Profit</div>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-purple-600 mb-1">${report.annualProfit.toLocaleString()}</div>
+                      <div className="text-sm font-medium text-purple-700">Annual Profit</div>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border border-orange-200">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-orange-600 mb-1">{report.positives.toLocaleString()}</div>
+                      <div className="text-sm font-medium text-orange-700">Qualified Leads/Month</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Row - Detailed Breakdown */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Infrastructure Breakdown */}
+                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                       <Mail className="h-5 w-5 mr-2 text-blue-600" />
-                      Infrastructure Breakdown
-                    </h4>
+                      Infrastructure Setup
+                    </h3>
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
-                        <span>Domains Needed:</span>
-                        <span className="font-semibold">{report.domainsNeeded}</span>
+                        <span className="text-gray-600">Domains Needed:</span>
+                        <span className="font-semibold text-gray-900">{report.domainsNeeded}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>VPS Cost:</span>
-                        <span className="font-semibold">${report.vpsCostMonthly}/month</span>
+                        <span className="text-gray-600">Domain Cost:</span>
+                        <span className="font-semibold text-gray-900">${Math.ceil(report.domainCostYearly / 12)}/month</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Warming Service:</span>
-                        <span className="font-semibold">${report.warmingCost}/month</span>
+                        <span className="text-gray-600">VPS Cost:</span>
+                        <span className="font-semibold text-gray-900">${report.vpsCostMonthly}/month</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Sending Tool:</span>
-                        <span className="font-semibold">${report.toolCost}/month</span>
+                        <span className="text-gray-600">Warming Service:</span>
+                        <span className="font-semibold text-gray-900">${report.warmingCost}/month</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Sending Tool:</span>
+                        <span className="font-semibold text-gray-900">${report.toolCost}/month</span>
                       </div>
                       {report.premiumMailboxes && (
                         <div className="flex justify-between">
-                          <span>Premium Mailboxes:</span>
-                          <span className="font-semibold">${report.apiCost}/month</span>
+                          <span className="text-gray-600">Premium Mailboxes:</span>
+                          <span className="font-semibold text-gray-900">${report.apiCost}/month</span>
                         </div>
                       )}
                       <div className="flex justify-between">
-                        <span>Management & Setup:</span>
-                        <span className="font-semibold">${report.configCost}/month</span>
-                      </div>
-                      <div className="border-t pt-3 flex justify-between font-bold">
-                        <span>Total Monthly Cost:</span>
-                        <span>${report.totalMonthlyCost.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Performance Metrics */}
-                <Card className="shadow-lg">
-                  <CardContent className="p-6">
-                    <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
-                      <Target className="h-5 w-5 mr-2 text-green-600" />
-                      Performance Metrics
-                    </h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div className="space-y-3">
-                        <div>
-                          <div className="text-gray-600">Monthly Volume</div>
-                          <div className="font-semibold text-lg">{report.uniqueVolume.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <div className="text-gray-600">Expected Opens</div>
-                          <div className="font-semibold text-lg text-blue-600">{report.opens.toLocaleString()}</div>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <div>
-                          <div className="text-gray-600">Expected Replies</div>
-                          <div className="font-semibold text-lg text-orange-600">{report.replies.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <div className="text-gray-600">Qualified Leads</div>
-                          <div className="font-semibold text-lg text-green-600">{report.positives.toLocaleString()}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Revenue Breakdown */}
-                <Card className="shadow-lg">
-                  <CardContent className="p-6">
-                    <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
-                      <DollarSign className="h-5 w-5 mr-2 text-green-600" />
-                      Revenue Analysis
-                    </h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between">
-                        <span>Monthly Revenue:</span>
-                        <span className="font-semibold text-green-600">${report.monthlyRevenue.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Monthly Costs:</span>
-                        <span className="font-semibold text-red-600">-${report.totalMonthlyCost.toLocaleString()}</span>
+                        <span className="text-gray-600">Management & Setup:</span>
+                        <span className="font-semibold text-gray-900">${report.configCost}/month</span>
                       </div>
                       <div className="border-t pt-3 flex justify-between font-bold text-lg">
-                        <span>Net Monthly Profit:</span>
-                        <span className="text-green-600">${report.monthlyProfit.toLocaleString()}</span>
-                      </div>
-                      <div className="bg-green-50 p-3 rounded-lg mt-4">
-                        <div className="text-center">
-                          <div className="text-sm text-gray-600">Annual Profit Projection</div>
-                          <div className="text-2xl font-bold text-green-600">${report.annualProfit.toLocaleString()}</div>
-                        </div>
+                        <span className="text-gray-900">Total Monthly Cost:</span>
+                        <span className="text-red-600">${report.totalMonthlyCost.toLocaleString()}</span>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
 
-                {/* CTA */}
-                <Card className="shadow-lg">
-                  <CardContent className="p-6 text-center">
-                    <h4 className="font-semibold text-gray-900 mb-4">🚀 Ready to achieve these results?</h4>
-                    <p className="text-gray-600 text-sm mb-4">
-                      Let our experts set up your entire email infrastructure and start generating leads immediately.
-                    </p>
-                    <a
-                      href="https://calendly.com/emailverse/consultation"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-700 transition-all duration-200"
-                    >
-                      <Calendar className="h-5 w-5" />
-                      <span>Schedule Free Consultation</span>
-                    </a>
-                  </CardContent>
-                </Card>
+                  {/* Performance Metrics */}
+                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <Target className="h-5 w-5 mr-2 text-green-600" />
+                      Performance Metrics
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="text-center p-4 bg-white rounded-lg border">
+                        <div className="text-2xl font-bold text-gray-900 mb-1">{report.uniqueVolume.toLocaleString()}</div>
+                        <div className="text-sm text-gray-600">Monthly Email Volume</div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200">
+                          <div className="text-lg font-bold text-blue-600">{report.opens.toLocaleString()}</div>
+                          <div className="text-xs text-blue-700">Opens</div>
+                        </div>
+                        <div className="text-center p-3 bg-orange-50 rounded-lg border border-orange-200">
+                          <div className="text-lg font-bold text-orange-600">{report.replies.toLocaleString()}</div>
+                          <div className="text-xs text-orange-700">Replies</div>
+                        </div>
+                      </div>
+                      <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                        <div className="text-2xl font-bold text-green-600 mb-1">{report.positives.toLocaleString()}</div>
+                        <div className="text-sm text-green-700">Qualified Leads</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Revenue Analysis */}
+                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <DollarSign className="h-5 w-5 mr-2 text-green-600" />
+                      Revenue Analysis
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                        <div className="text-2xl font-bold text-green-600 mb-1">${report.monthlyRevenue.toLocaleString()}</div>
+                        <div className="text-sm text-green-700">Monthly Revenue</div>
+                      </div>
+                      <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200">
+                        <div className="text-2xl font-bold text-red-600 mb-1">-${report.totalMonthlyCost.toLocaleString()}</div>
+                        <div className="text-sm text-red-700">Monthly Costs</div>
+                      </div>
+                      <div className="text-center p-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg">
+                        <div className="text-2xl font-bold mb-1">${report.monthlyProfit.toLocaleString()}</div>
+                        <div className="text-sm opacity-90">Net Monthly Profit</div>
+                      </div>
+                      <div className="text-center p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <div className="text-lg font-bold text-purple-600">${report.annualProfit.toLocaleString()}</div>
+                        <div className="text-xs text-purple-700">Annual Projection</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA Section */}
+                <div className="mt-8 text-center bg-gradient-to-r from-green-50 to-blue-50 p-8 rounded-xl border border-gray-200">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">🚀 Ready to achieve these results?</h3>
+                  <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                    Let our experts set up your entire email infrastructure and start generating leads immediately. 
+                    We handle everything from domain setup to campaign optimization.
+                  </p>
+                  <a
+                    href="https://calendly.com/emailverse/consultation"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500 to-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-blue-700 transition-all duration-200 text-lg"
+                  >
+                    <Calendar className="h-6 w-6" />
+                    <span>Schedule Free Consultation</span>
+                  </a>
+                </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
