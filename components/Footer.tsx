@@ -128,9 +128,6 @@ const Footer = () => {
             <p className="text-secondary-400 text-sm">
               © 2024 EmailVerse. All rights reserved.
             </p>
-            <p className="text-secondary-400 text-sm mt-4 md:mt-0">
-              Built with ❤️ for email marketers worldwide
-            </p>
           </div>
         </div>
       </div>
