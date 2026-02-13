@@ -259,7 +259,7 @@ export default function ROICalculator() {
       
       if (question.type === 'number') {
         setInputType('number')
-      } else if (question.type === 'options') {
+      } else if (question.type === 'options' && 'options' in question) {
         setInputType('options')
         const optionsQuestion = question as OptionsQuestion
         const opts = optionsQuestion.options(newState)

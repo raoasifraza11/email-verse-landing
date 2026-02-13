@@ -29,7 +29,7 @@ export default function AIEmailBuilder() {
     tone: ""
   })
   
-  const [output, setOutput] = useState(null)
+  const [output, setOutput] = useState<{ subject: string; body: string } | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [copied, setCopied] = useState(false)
 
