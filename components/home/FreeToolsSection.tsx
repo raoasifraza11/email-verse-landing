@@ -31,23 +31,6 @@ const FreeToolsSection = () => {
   const tools = [
     {
       id: 0,
-      name: 'AI Email Builder',
-      description: 'Create stunning email templates with our AI-powered drag-and-drop builder',
-      icon: Mail,
-      gradient: 'from-primary-500 to-primary-600',
-      features: ['AI-Powered Design', 'Mobile Responsive', '500+ Templates', 'Custom Branding'],
-      demo: {
-        title: 'Build Your Template',
-        content: 'Design professional emails in minutes with our intuitive AI builder.',
-        mockData: {
-          templates: 247,
-          opens: '94.2%',
-          clicks: '12.8%'
-        }
-      }
-    },
-    {
-      id: 1,
       name: 'Subject Line Optimizer',
       description: 'AI-powered subject line analysis for maximum open rates',
       icon: Brain,
@@ -64,7 +47,7 @@ const FreeToolsSection = () => {
       }
     },
     {
-      id: 2,
+      id: 1,
       name: 'Email Spam Checker',
       description: 'Analyze your emails to avoid spam filters and improve deliverability',
       icon: Shield,
@@ -81,7 +64,7 @@ const FreeToolsSection = () => {
       }
     },
     {
-      id: 3,
+      id: 2,
       name: 'ROI Calculator',
       description: 'Calculate your potential return on investment with email marketing',
       icon: Calculator,
@@ -179,31 +162,7 @@ const FreeToolsSection = () => {
                           </div>
                         ))}
                       </div>
-                      {tool.id === 2 ? (
-                        <a 
-                          href="/spam-checker"
-                          className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
-                            activeTool === index 
-                              ? 'text-primary-700' 
-                              : 'text-primary-600 hover:text-primary-700'
-                          }`}
-                        >
-                          <span>Try Free Tool</span>
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </a>
-                      ) : tool.id === 3 ? (
-                        <a 
-                          href="/roi-calculator"
-                          className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
-                            activeTool === index 
-                              ? 'text-primary-700' 
-                              : 'text-primary-600 hover:text-primary-700'
-                          }`}
-                        >
-                          <span>Try Free Tool</span>
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </a>
-                      ) : tool.id === 1 ? (
+                      {tool.id === 0 ? (
                         <a 
                           href="/subject-line-optimizer"
                           className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
@@ -215,9 +174,9 @@ const FreeToolsSection = () => {
                           <span>Try Free Tool</span>
                           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </a>
-                      ) : activeTool === 0 ? (
+                      ) : tool.id === 1 ? (
                         <a 
-                          href="/ai-email-builder"
+                          href="/spam-checker"
                           className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
                             activeTool === index 
                               ? 'text-primary-700' 
@@ -227,16 +186,19 @@ const FreeToolsSection = () => {
                           <span>Try Free Tool</span>
                           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </a>
-                      ) : (
-                        <button className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
-                          activeTool === index 
-                            ? 'text-primary-700' 
-                            : 'text-primary-600 hover:text-primary-700'
-                        }`}>
+                      ) : tool.id === 2 ? (
+                        <a 
+                          href="/roi-calculator"
+                          className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 ${
+                            activeTool === index 
+                              ? 'text-primary-700' 
+                              : 'text-primary-600 hover:text-primary-700'
+                          }`}
+                        >
                           <span>Try Free Tool</span>
                           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </button>
-                      )}
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -357,23 +319,7 @@ const FreeToolsSection = () => {
               {/* Enhanced Action Buttons */}
               <div className="p-6 bg-gradient-to-br from-gray-50 to-white border-t border-gray-100">
                 <div className="flex space-x-3">
-                  {activeTool === 2 ? (
-                    <a 
-                      href="/spam-checker"
-                      className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
-                    >
-                      <Eye className="h-4 w-4" />
-                      <span>Try Now</span>
-                    </a>
-                  ) : activeTool === 3 ? (
-                    <a 
-                      href="/roi-calculator"
-                      className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
-                    >
-                      <Eye className="h-4 w-4" />
-                      <span>Try Now</span>
-                    </a>
-                  ) : activeTool === 1 ? (
+                  {activeTool === 0 ? (
                     <a 
                       href="/subject-line-optimizer"
                       className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
@@ -381,9 +327,17 @@ const FreeToolsSection = () => {
                       <Eye className="h-4 w-4" />
                       <span>Try Now</span>
                     </a>
-                  ) : activeTool === 0 ? (
+                  ) : activeTool === 1 ? (
                     <a 
-                      href="/ai-email-builder"
+                      href="/spam-checker"
+                      className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Try Now</span>
+                    </a>
+                  ) : activeTool === 2 ? (
+                    <a 
+                      href="/roi-calculator"
                       className={`flex-1 bg-gradient-to-r ${tools[activeTool].gradient} hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2`}
                     >
                       <Eye className="h-4 w-4" />
@@ -405,9 +359,9 @@ const FreeToolsSection = () => {
                 <div className="mt-4 flex items-center space-x-2">
                   <div className="flex-1 bg-gray-200 rounded-full h-2">
                     <div className={`bg-gradient-to-r ${tools[activeTool].gradient} h-2 rounded-full transition-all duration-1000 ease-out`} 
-                         style={{ width: `${(activeTool + 1) * 25}%` }}></div>
+                         style={{ width: `${((activeTool + 1) / tools.length) * 100}%` }}></div>
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">{activeTool + 1}/4</span>
+                  <span className="text-xs text-gray-500 font-medium">{activeTool + 1}/{tools.length}</span>
                 </div>
               </div>
             </div>
