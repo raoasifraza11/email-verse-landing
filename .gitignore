@@ -279,3 +279,6 @@ next-env.d.ts
 
 # Turbo
 .turbo
+
+# Documentation (not pushed to GitHub)
+docs/

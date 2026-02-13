@@ -4,7 +4,11 @@ const nextConfig = {
   output: 'standalone',
   
   images: {
-    domains: ['images.unsplash.com', 'via.placeholder.com'],
+    domains: [
+      'images.unsplash.com', 
+      'via.placeholder.com',
+      'storage.googleapis.com',
+    ],
     // Optimize images for production
     unoptimized: process.env.NODE_ENV === 'development' ? false : false,
   },

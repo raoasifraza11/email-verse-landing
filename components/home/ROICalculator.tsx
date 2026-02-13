@@ -299,67 +299,78 @@ const ROICalculator = () => {
     const sequences = parseInt(data.sequences) || 3
     const productPrice = parseFloat(data.productPrice) || 300
     
-    // More realistic domain calculation - 30 emails per domain per day (industry standard)
+    // Days per week (default to 5 days per week)
+    const daysPerWeek = 5
+    // Weeks per month (using 4 weeks to match example: 100 emails/day × 5 days × 4 weeks = 2000/month)
+    const weeksPerMonth = 4
+
+    // Calculate unique volume: emails/day × days/week × weeks/month
+    const uniqueVolume = Math.round(emailsPerDay * daysPerWeek * weeksPerMonth)
+    
+    // Total volume includes followups: unique volume × sequences
+    const totalVolume = uniqueVolume * sequences
+
+    // Domain calculation - 30 emails per domain per day (industry standard)
+    // Based on total emails per day (unique × sequences)
     const totalEmailsPerDay = emailsPerDay * sequences
     const domainsNeeded = Math.ceil(totalEmailsPerDay / 30)
     
-    // Cost calculations
-    const warmingCost = domainsNeeded * 15 // More realistic warming cost
-    const domainCostMonthly = Math.ceil(domainsNeeded * 12 / 12) // $12/year per domain = $1/month
-    const vpsCount = Math.ceil(domainsNeeded / 10) // 1 VPS can handle 10 domains
-    const vpsCost = vpsCount * 8 // More realistic VPS cost
+    // Domain cost: $10/domain/year (show separately as annual)
+    const domainCostYearly = domainsNeeded * 10
+    const domainCostMonthly = domainCostYearly / 12 // For monthly cost calculation only
     
-    // API Cost based on email volume (more realistic pricing)
-    let apiCost = 0
-    if (totalEmailsPerDay <= 1000) apiCost = 50
-    else if (totalEmailsPerDay <= 3000) apiCost = 100
-    else if (totalEmailsPerDay <= 5000) apiCost = 150
-    else apiCost = 200
+    // VPS cost: $5/vps/month (1 VPS can handle 10 domains)
+    const vpsCount = Math.ceil(domainsNeeded / 10)
+    const vpsCost = vpsCount * 5
 
+    // Warming cost: Premium $19/domain/month OR Built-in (free)
+    // Note: This is simplified - in real calculator, user selects warming plan
+    const warmingCost = domainsNeeded * 19 // Assuming premium for now
+    
+    // Premium Mailboxes: $100/month (8 Gsuite and 25 Microsoft mailboxes)
+    // Note: This is simplified - in real calculator, user selects premium mailboxes
+    let apiCost = 0 // Default to no premium mailboxes
+
+    // Tool cost
     let toolCost = 0
     if (data.platform === "instantly") toolCost = 97
     else if (data.platform === "smartlead") toolCost = 94
-    else if (data.platform === "mailwizz") toolCost = 90
-    else toolCost = 97 // Default to Instantly
+    else if (data.platform === "mailwizz") toolCost = 0 // $90 one-time, not monthly
 
-    // Management cost structure (unchanged as it's reasonable)
+    // Management cost: $100/month for up to 2000 emails/day, $200/month if above
     let configCost = 0
-    if (emailsPerDay >= 100 && emailsPerDay <= 1000) {
-      configCost = 100
-    } else if (emailsPerDay >= 1001 && emailsPerDay <= 3000) {
-      configCost = 200
-    } else if (emailsPerDay >= 3001) {
-      configCost = 300
+    if (emailsPerDay > 0) {
+      if (emailsPerDay <= 2000) {
+        configCost = 100
+      } else {
+        configCost = 200
+      }
     }
 
+    // Total monthly cost (excluding one-time Mailwizz cost)
     const totalMonthlyCost = vpsCost + warmingCost + apiCost + toolCost + configCost + domainCostMonthly
 
-    // More realistic ROI metrics
-    const workingDaysPerMonth = 22 // Business days
-    const uniqueVolume = emailsPerDay * workingDaysPerMonth
-    const totalVolume = uniqueVolume * sequences
-
-    // More realistic industry open rates for cold email
+    // Industry-specific open rates (from provided table)
     const industryRates: Record<string, number> = {
-      saas: 0.25,           // 25% (more realistic for cold email)
-      software: 0.22,       // 22%
-      finance: 0.20,        // 20% (finance is harder)
-      fintech: 0.23,        // 23%
-      realestate: 0.28,     // 28% (real estate responds better)
-      podcast: 0.26,        // 26%
-      leadgenerationsoftware: 0.24, // 24%
-      other: 0.23           // 23% default
+      saas: 0.48,              // 48%
+      software: 0.26,          // 26%
+      finance: 0.39,           // 39%
+      fintech: 0.38,           // 38%
+      leadgenerationsoftware: 0.41, // 41% (Lead Generation Software)
+      realestate: 0.22,        // 22%
+      podcast: 0.43,           // 43%
+      other: 0.39             // Default to Finance
     }
 
     const openRate = industryRates[data.niche] || industryRates.other
     const opens = Math.round(uniqueVolume * openRate)
     
-    // More realistic reply rates (2-4% is industry standard for cold email)
-    const replyRate = sequences >= 4 ? 0.035 : sequences >= 3 ? 0.03 : 0.025
+    // Reply rate logic: 6% of opens if sequences ≥ 3, else 4% of opens
+    const replyRate = sequences >= 3 ? 0.06 : 0.04
     const replies = Math.round(opens * replyRate)
     
-    // More realistic positive rate (15-25% of replies are positive)
-    const positiveRate = sequences >= 4 ? 0.25 : sequences >= 3 ? 0.20 : 0.15
+    // Positive response rate: 11% of replies if sequences > 3, else 5% of replies
+    const positiveRate = sequences > 3 ? 0.11 : 0.05
     const positives = Math.round(replies * positiveRate)
     
     // Revenue calculations
@@ -371,15 +382,15 @@ const ROICalculator = () => {
     
     setResults({
       domainsNeeded,
-      domainCost: domainCostMonthly * 12, // Show annual domain cost
+      domainCost: domainCostYearly, // Show annual domain cost
       vpsCost,
       warmingCost,
       apiCost,
       toolCost,
       configCost,
       totalMonthlyCost,
-      uniqueVolume: Math.round(uniqueVolume),
-      totalVolume: Math.round(totalVolume),
+      uniqueVolume,
+      totalVolume,
       opens,
       replies,
       positives,
@@ -590,8 +601,9 @@ const ROICalculator = () => {
                 <div className="font-semibold">{results.domainsNeeded}</div>
               </div>
               <div>
-                <div className="text-gray-600">Domain Cost/Month</div>
-                <div className="font-semibold">{formatCurrency(results.domainCost / 12)}</div>
+                <div className="text-gray-600">Domain Cost (Annual)</div>
+                <div className="font-semibold">{formatCurrency(results.domainCost)}</div>
+                <div className="text-xs text-gray-500">({formatCurrency(results.domainCost / 12)}/month)</div>
               </div>
               <div>
                 <div className="text-gray-600">Management Cost</div>
@@ -642,8 +654,52 @@ const ROICalculator = () => {
             <div className="text-2xl font-bold">{formatCurrency(results.annualProfit)}</div>
           </div>
 
+          {/* ROI Summary Section */}
+          <div className="bg-white rounded-lg border border-gray-200 p-5 mt-5">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-8 h-8 bg-purple-600 rounded flex items-center justify-center">
+                <Calculator className="h-5 w-5 text-white" />
+              </div>
+              <h4 className="text-lg font-bold text-purple-600">ROI Summary</h4>
+            </div>
+            
+            <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+              Based on your <span className="font-semibold">{formData.niche || 'business'}</span> business sending{' '}
+              <span className="font-semibold">{parseInt(formData.emailsPerDay) || 0} emails per day</span> with{' '}
+              <span className="font-semibold">{parseInt(formData.sequences) || 0} sequences</span> and a product price of{' '}
+              <span className="font-semibold">${parseFloat(formData.productPrice) || 0}</span>, you can expect approximately{' '}
+              <span className="font-semibold text-green-600">{formatNumber(results.positives)} positive responses</span> per month. 
+              After deducting monthly costs of{' '}
+              <span className="font-semibold text-red-600">{formatCurrency(results.totalMonthlyCost)}</span>, your net monthly profit would be{' '}
+              <span className="font-semibold text-green-600">{formatCurrency(results.monthlyProfit)}</span>, leading to an annual profit of{' '}
+              <span className="font-semibold text-green-600">{formatCurrency(results.annualProfit)}</span>.
+            </p>
+
+            <div className="text-center mb-4">
+              <a
+                href="https://calendly.com/emailverse/consultation"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-sm"
+              >
+                Want to get started?
+              </a>
+            </div>
+
+            {/* Disclaimer Section */}
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <h5 className="font-bold text-gray-900 mb-2 text-sm">Disclaimer:</h5>
+              <p className="text-xs text-gray-700 leading-relaxed mb-2">
+                These estimates are based on our 10+ years of experience. Actual results may vary depending on list quality, offer relevance, user interest, and email infrastructure. Most importantly, your results will depend on the strength of your sending infrastructure and how well it's managed—combined with a highly targeted list.
+              </p>
+              <p className="text-xs text-gray-700 font-medium">
+                We won't stop until we bring you the results you're expecting 😉
+              </p>
+            </div>
+          </div>
+
           {/* Action Buttons */}
-          <div className="flex space-x-3">
+          <div className="flex space-x-3 mt-5">
             <button
               onClick={resetCalculator}
               className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors text-sm"

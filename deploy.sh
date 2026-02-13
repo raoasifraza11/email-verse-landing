@@ -1,117 +1,98 @@
 #!/bin/bash
+
 # =============================================================================
-# EmailVerse GCP Deployment Script
-# One-click deployment for minimal cost setup
+# EmailVerse Landing Page - Deployment Script
 # =============================================================================
 
-set -e
+set -e  # Exit on error
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║     EmailVerse - GCP Cloud Run Deployment                  ║${NC}"
-echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
-echo ""
+echo -e "${GREEN}🚀 Starting EmailVerse Landing Page Deployment${NC}\n"
 
-# Check if gcloud is installed
-if ! command -v gcloud &> /dev/null; then
-    echo -e "${RED}Error: gcloud CLI is not installed.${NC}"
-    echo "Please install it from: https://cloud.google.com/sdk/docs/install"
-    exit 1
-fi
+# Load variables from terraform.tfvars
+cd terraform
+PROJECT_ID=$(grep '^project_id' terraform.tfvars | sed 's/.*= *"\(.*\)".*/\1/' | head -1)
+REGION=$(grep '^region' terraform.tfvars | sed 's/.*= *"\(.*\)".*/\1/' | head -1)
+IMAGE_NAME=$(grep '^image_name' terraform.tfvars | sed 's/.*= *"\(.*\)".*/\1/' | head -1)
+IMAGE_TAG=$(grep '^image_tag' terraform.tfvars | sed 's/.*= *"\(.*\)".*/\1/' | head -1)
+SERVICE_NAME=$(grep '^service_name' terraform.tfvars | sed 's/.*= *"\(.*\)".*/\1/' | head -1)
+cd ..
 
-# Check if docker is installed
-if ! command -v docker &> /dev/null; then
-    echo -e "${RED}Error: Docker is not installed.${NC}"
-    echo "Please install it from: https://docs.docker.com/get-docker/"
-    exit 1
-fi
-
-# Get configuration
-PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
 if [ -z "$PROJECT_ID" ]; then
-    echo -e "${YELLOW}No default project set.${NC}"
-    read -p "Enter your GCP Project ID: " PROJECT_ID
-    gcloud config set project "$PROJECT_ID"
+    echo -e "${RED}❌ Error: project_id not found in terraform/terraform.tfvars${NC}"
+    exit 1
 fi
 
-REGION="${GCP_REGION:-us-central1}"
-SERVICE_NAME="${SERVICE_NAME:-emailverse-landing}"
-REPO_NAME="${REPO_NAME:-emailverse-repo}"
-IMAGE_NAME="${IMAGE_NAME:-emailverse-landing}"
-
-echo -e "${GREEN}Configuration:${NC}"
-echo "  Project ID:   $PROJECT_ID"
-echo "  Region:       $REGION"
-echo "  Service:      $SERVICE_NAME"
+echo -e "${YELLOW}📋 Configuration:${NC}"
+echo "  Project ID: $PROJECT_ID"
+echo "  Region: ${REGION:-us-central1}"
+echo "  Image: $IMAGE_NAME:$IMAGE_TAG"
+echo "  Service: ${SERVICE_NAME:-emailverse-landing}"
 echo ""
 
-# Confirm deployment
-read -p "Proceed with deployment? (y/n): " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Deployment cancelled."
-    exit 0
+# Step 1: Check Docker
+echo -e "${YELLOW}🐳 Step 1: Checking Docker...${NC}"
+if ! command -v docker &> /dev/null; then
+    echo -e "${RED}❌ Docker is not installed. Please install Docker first.${NC}"
+    exit 1
 fi
 
-echo ""
-echo -e "${YELLOW}Step 1/5: Enabling required APIs...${NC}"
-gcloud services enable \
-    run.googleapis.com \
-    artifactregistry.googleapis.com \
-    cloudbuild.googleapis.com \
-    --quiet
+if ! docker info &> /dev/null; then
+    echo -e "${RED}❌ Docker daemon is not running. Please start Docker Desktop.${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✅ Docker is running${NC}\n"
 
-echo ""
-echo -e "${YELLOW}Step 2/5: Creating Artifact Registry repository...${NC}"
-gcloud artifacts repositories create "$REPO_NAME" \
-    --repository-format=docker \
-    --location="$REGION" \
-    --description="EmailVerse Docker repository" \
-    2>/dev/null || echo "Repository already exists, continuing..."
+# Step 2: Check gcloud
+echo -e "${YELLOW}☁️  Step 2: Checking Google Cloud SDK...${NC}"
+if ! command -v gcloud &> /dev/null; then
+    echo -e "${RED}❌ gcloud CLI is not installed. Please install it first.${NC}"
+    echo "   Visit: https://cloud.google.com/sdk/docs/install"
+    exit 1
+fi
+echo -e "${GREEN}✅ gcloud CLI is installed${NC}\n"
 
-echo ""
-echo -e "${YELLOW}Step 3/5: Configuring Docker authentication...${NC}"
-gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
+# Step 3: Authenticate with GCP
+echo -e "${YELLOW}🔐 Step 3: Authenticating with Google Cloud...${NC}"
+gcloud auth configure-docker ${REGION:-us-central1}-docker.pkg.dev
+echo -e "${GREEN}✅ Authenticated${NC}\n"
 
-echo ""
-echo -e "${YELLOW}Step 4/5: Building Docker image...${NC}"
-IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest"
-docker build -t "$IMAGE_URI" .
+# Step 4: Build Docker image
+echo -e "${YELLOW}🔨 Step 4: Building Docker image...${NC}"
+docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+echo -e "${GREEN}✅ Docker image built${NC}\n"
 
-echo ""
-echo -e "${YELLOW}Step 5/5: Pushing and deploying to Cloud Run...${NC}"
-docker push "$IMAGE_URI"
+# Step 5: Tag image for Artifact Registry
+ARTIFACT_REGISTRY_URL="${REGION:-us-central1}-docker.pkg.dev/${PROJECT_ID}/emailverse-repo"
+echo -e "${YELLOW}🏷️  Step 5: Tagging image for Artifact Registry...${NC}"
+docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ARTIFACT_REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}
+echo -e "${GREEN}✅ Image tagged${NC}\n"
 
-gcloud run deploy "$SERVICE_NAME" \
-    --image "$IMAGE_URI" \
-    --region "$REGION" \
-    --platform managed \
-    --allow-unauthenticated \
-    --cpu 1 \
-    --memory 512Mi \
-    --min-instances 0 \
-    --max-instances 3 \
-    --set-env-vars "NODE_ENV=production"
+# Step 6: Push image to Artifact Registry
+echo -e "${YELLOW}📤 Step 6: Pushing image to Artifact Registry...${NC}"
+docker push ${ARTIFACT_REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}
+echo -e "${GREEN}✅ Image pushed${NC}\n"
 
-echo ""
-echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║     Deployment Complete! 🚀                                ║${NC}"
-echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
-echo ""
+# Step 7: Initialize Terraform (if needed)
+echo -e "${YELLOW}🏗️  Step 7: Initializing Terraform...${NC}"
+cd terraform
+if [ ! -d ".terraform" ]; then
+    terraform init
+fi
+echo -e "${GREEN}✅ Terraform initialized${NC}\n"
 
-# Get the service URL
-SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" --region "$REGION" --format 'value(status.url)')
-echo -e "${GREEN}Your site is live at:${NC} $SERVICE_URL"
-echo ""
-echo -e "${YELLOW}Cost Optimization Tips:${NC}"
-echo "  • min-instances=0 means you pay nothing when idle"
-echo "  • You only pay for actual requests (~\$0.40/million requests)"
-echo "  • Estimated monthly cost for low traffic: \$0 - \$5"
-echo ""
+# Step 8: Apply Terraform configuration
+echo -e "${YELLOW}🚀 Step 8: Deploying to Cloud Run...${NC}"
+terraform apply -auto-approve
+echo -e "${GREEN}✅ Deployment complete!${NC}\n"
 
+# Step 9: Get the service URL
+echo -e "${YELLOW}📊 Step 9: Getting service URL...${NC}"
+SERVICE_URL=$(terraform output -raw cloud_run_url)
+echo -e "${GREEN}✅ Deployment successful!${NC}\n"
+echo -e "${GREEN}🌐 Your website is live at: ${SERVICE_URL}${NC}\n"

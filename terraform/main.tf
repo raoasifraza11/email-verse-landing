@@ -36,6 +36,9 @@ resource "google_project_service" "required_apis" {
     "run.googleapis.com",
     "artifactregistry.googleapis.com",
     "cloudbuild.googleapis.com",
+    "firestore.googleapis.com",
+    "storage.googleapis.com",
+    "identitytoolkit.googleapis.com", # Firebase Authentication / Identity Platform
   ])
   
   project            = var.project_id
@@ -75,6 +78,9 @@ resource "google_cloud_run_v2_service" "emailverse" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   template {
+    # Use service account for GCP API access
+    service_account = google_service_account.emailverse_service.email
+
     # Minimal resources for cost optimization
     containers {
       image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.emailverse.repository_id}/${var.image_name}:${var.image_tag}"
@@ -96,6 +102,22 @@ resource "google_cloud_run_v2_service" "emailverse" {
         name  = "NODE_ENV"
         value = "production"
       }
+      env {
+        name  = "GCP_PROJECT_ID"
+        value = var.project_id
+      }
+      env {
+        name  = "GCS_BUCKET_NAME"
+        value = google_storage_bucket.blog_images.name
+      }
+      env {
+        name  = "NEXT_PUBLIC_FIREBASE_PROJECT_ID"
+        value = var.project_id
+      }
+      env {
+        name  = "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"
+        value = "${var.project_id}.firebaseapp.com"
+      }
     }
 
     scaling {
@@ -114,7 +136,10 @@ resource "google_cloud_run_v2_service" "emailverse" {
 
   depends_on = [
     google_project_service.required_apis,
-    google_artifact_registry_repository.emailverse
+    google_artifact_registry_repository.emailverse,
+    google_firestore_database.default,
+    google_storage_bucket.blog_images,
+    google_service_account.emailverse_service,
   ]
 }
 
@@ -128,6 +153,102 @@ resource "google_cloud_run_v2_service_iam_member" "public_access" {
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
+
+# -----------------------------------------------------------------------------
+# Firestore Database (Native mode - cost-effective)
+# -----------------------------------------------------------------------------
+resource "google_firestore_database" "default" {
+  project     = var.project_id
+  name        = "(default)"
+  location_id = var.region
+  type        = "FIRESTORE_NATIVE"
+
+  depends_on = [google_project_service.required_apis]
+}
+
+# -----------------------------------------------------------------------------
+# Cloud Storage Bucket for Blog Images
+# -----------------------------------------------------------------------------
+resource "google_storage_bucket" "blog_images" {
+  name          = "${var.project_id}-blog-images"
+  location      = var.region
+  force_destroy = false
+
+  uniform_bucket_level_access = true
+
+  # Cost optimization: Lifecycle rules
+  lifecycle_rule {
+    condition {
+      age = 365 # Delete objects older than 1 year
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
+  # CORS configuration for image uploads
+  cors {
+    origin          = ["*"]
+    method          = ["GET", "HEAD", "PUT", "POST", "DELETE"]
+    response_header = ["*"]
+    max_age_seconds = 3600
+  }
+
+  depends_on = [google_project_service.required_apis]
+}
+
+# Make bucket publicly readable for images
+resource "google_storage_bucket_iam_member" "public_read" {
+  bucket = google_storage_bucket.blog_images.name
+  role   = "roles/storage.objectViewer"
+  member = "allUsers"
+}
+
+# Service account for Cloud Run to access Firestore and Storage
+resource "google_service_account" "emailverse_service" {
+  account_id   = "emailverse-service"
+  display_name = "EmailVerse Service Account"
+  project      = var.project_id
+}
+
+# Grant Firestore access
+resource "google_project_iam_member" "firestore_user" {
+  project = var.project_id
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.emailverse_service.email}"
+}
+
+# Grant Storage access
+resource "google_project_iam_member" "storage_admin" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.emailverse_service.email}"
+}
+
+
+# -----------------------------------------------------------------------------
+# Identity Platform (Firebase Auth) Configuration
+# Note: API key needs to be created manually in Firebase Console
+# or via gcloud, then set as environment variable
+# -----------------------------------------------------------------------------
+resource "google_identity_platform_config" "default" {
+  project = var.project_id
+
+  sign_in {
+    allow_duplicate_emails = false
+
+    email {
+      enabled           = true
+      password_required = true
+    }
+  }
+
+  depends_on = [google_project_service.required_apis]
+}
+
+# Web API key for Firebase (needs to be created manually or via gcloud)
+# You can get this from Firebase Console > Project Settings > General > Web API Key
+# Or create it via: gcloud alpha identity platform oauth-clients create --display-name="Web Client"
 
 # -----------------------------------------------------------------------------
 # Optional: Custom Domain Mapping
