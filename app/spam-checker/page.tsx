@@ -49,9 +49,11 @@ export default function SpamCheckerPage() {
     if (item.term === "$") {
       return "\\$"
     } else {
-      let escaped = item.term.split(" ").map(word => 
+      // Escape special regex characters and handle multi-word phrases
+      let escaped = item.term.split(/\s+/).map(word => 
         word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       ).join("[\\s\\-]+")
+      // Use word boundaries - they work at word/non-word boundaries
       return "\\b" + escaped + "\\b"
     }
   })
@@ -433,29 +435,6 @@ export default function SpamCheckerPage() {
         </div>
       </section>
 
-      <style jsx>{`
-        .shady {
-          color: #6b7280;
-          font-weight: bold;
-          background-color: #f3f4f6;
-          padding: 2px 4px;
-          border-radius: 3px;
-        }
-        .urgency {
-          color: #dc2626;
-          font-weight: bold;
-          background-color: #fef2f2;
-          padding: 2px 4px;
-          border-radius: 3px;
-        }
-        .exaggerated {
-          color: #f59e0b;
-          font-weight: bold;
-          background-color: #fffbeb;
-          padding: 2px 4px;
-          border-radius: 3px;
-        }
-      `}</style>
     </div>
   )
 }

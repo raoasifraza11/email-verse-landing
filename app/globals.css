@@ -161,3 +161,28 @@
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
 }
+
+/* Spam word highlighting styles */
+.shady {
+  color: #6b7280;
+  font-weight: bold;
+  background-color: #f3f4f6;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.urgency {
+  color: #dc2626;
+  font-weight: bold;
+  background-color: #fef2f2;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.exaggerated {
+  color: #f59e0b;
+  font-weight: bold;
+  background-color: #fffbeb;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
