@@ -27,175 +27,95 @@ export const metadata: Metadata = {
 }
 
 export default function IntegrationsPage() {
-  const dataProspectingTools = [
-    {
-      name: 'ZoomInfo',
-      description: 'Large North American dataset with deep firmographics and intent signals for email prospecting.',
-      category: 'Data & Prospecting',
-      icon: '🔍',
-      url: 'https://www.zoominfo.com',
-      pros: ['Comprehensive B2B database', 'Intent data integration', 'Advanced filtering'],
-      cons: ['Higher price point', 'North America focused'],
-      bestFor: 'Enterprise email campaigns targeting specific industries and roles'
-    },
-    {
-      name: 'Apollo.io',
-      description: 'All-in-one prospecting platform with contact data and built-in email sequences.',
-      category: 'Data & Prospecting',
-      icon: '🚀',
-      url: 'https://www.apollo.io',
-      pros: ['Integrated outreach platform', 'Large contact database', 'Affordable pricing'],
-      cons: ['Data quality varies', 'Limited advanced features'],
-      bestFor: 'Small to medium teams wanting data and email automation in one platform'
-    },
-    {
-      name: 'Clay',
-      description: 'Flexible data enrichment platform that pulls from multiple sources for custom email targeting.',
-      category: 'Data & Prospecting',
-      icon: '🧱',
-      url: 'https://www.clay.com',
-      pros: ['Multi-source enrichment', 'Custom workflows', 'Advanced scoring'],
-      cons: ['Steep learning curve', 'Requires technical setup'],
-      bestFor: 'Growth teams building sophisticated email targeting workflows'
-    },
-    {
-      name: 'Seamless.AI',
-      description: 'Real-time contact discovery with Chrome extension for quick email prospecting.',
-      category: 'Data & Prospecting',
-      icon: '⚡',
-      url: 'https://seamless.ai',
-      pros: ['Real-time discovery', 'Easy Chrome integration', 'Quick setup'],
-      cons: ['Limited bulk operations', 'Accuracy varies'],
-      bestFor: 'Sales reps doing manual prospecting who need quick email discovery'
-    }
-  ]
+  const cdnBase = 'https://cdn.prod.website-files.com/641db47beed260831278bd61'
 
-  const emailAutomationTools = [
+  const toolCategories = [
     {
-      name: 'Instantly.ai',
-      description: 'Cold email automation with advanced deliverability features and inbox management.',
-      category: 'Email Automation',
-      icon: '📧',
-      url: 'https://instantly.ai',
-      pros: ['Strong deliverability focus', 'Multi-inbox management', 'Affordable pricing'],
-      cons: ['Limited advanced features', 'Basic analytics'],
-      bestFor: 'Teams focused on cold email outreach at scale with deliverability concerns'
+      name: 'Data and Prospecting',
+      icon: Database,
+      color: 'blue',
+      tools: [
+        { name: 'Clay', url: 'https://clay.com/?via=salescaptain', image: `${cdnBase}/668dadba3028c60b5ccf0df0_Group%207755.svg` },
+        { name: 'Seamless.ai', url: 'https://seamless.ai/', image: `${cdnBase}/69069453ff3e72eab54853a0_seamless.png` },
+        { name: 'Cognism', url: 'https://www.cognism.com/', image: `${cdnBase}/6906925e4283f4085fb2554d_CTA-14%20copy.png` },
+        { name: 'Prospeo', url: 'https://prospeo.io/?via=salescaptain', image: `${cdnBase}/668dad2a30aab64b6bcd8357_Group%207749.svg` },
+        { name: 'Apollo', url: 'https://get.apollo.io/salescaptain', image: `${cdnBase}/66ec1b7814874f162d9f83ff_salescaptain-website-tools_0002_apple-icon.png` },
+        { name: 'Crunchbase', url: 'https://www.crunchbase.com/?ref=salescaptain.io', image: `${cdnBase}/671b4f2b21fc3999e3ecb18b_salescaptain-website-tools_0024_crunchbase.png` },
+        { name: 'Bombora', url: 'https://bombora.com/?ref=salescaptain.io', image: `${cdnBase}/671b4ed5a6f59db2299f3d47_salescaptain-website-tools_0023_bombora.png` },
+        { name: 'Pitchbook', url: 'https://pitchbook.com/?ref=salescaptain.io', image: `${cdnBase}/671b4f3eb344465d2282bf6b_salescaptain-website-tools_0022_pitchbook.png` },
+        { name: 'FullEnrich', url: 'https://fullenrich.com/?ref=salescaptain.io', image: `${cdnBase}/66ec1b78d515d1bb788ab48c_salescaptain-website-tools_0001_download.png` },
+        { name: 'Zoominfo', url: 'https://www.zoominfo.com/?ref=salescaptain.io', image: `${cdnBase}/671939322e4d4c997df10b71_salescaptain-website-tools_0021_zoominfo.png` }
+      ]
     },
     {
-      name: 'Smartlead',
-      description: 'Email automation platform built for high-volume campaigns with infrastructure focus.',
-      category: 'Email Automation',
-      icon: '🎯',
-      url: 'https://smartlead.ai',
-      pros: ['High volume capacity', 'Infrastructure management', 'Deliverability tools'],
-      cons: ['Complex setup', 'Learning curve'],
-      bestFor: 'Agencies and teams running large-scale email campaigns'
+      name: 'Outreach and Sequencing',
+      icon: Mail,
+      color: 'green',
+      tools: [
+        { name: 'Reply.io', url: 'https://www.reply.io/', image: `${cdnBase}/66ec1b7671e310437f3503f0_salescaptain-website-tools_0000_replyio.png` },
+        { name: 'Instantly', url: 'https://instantly.ai/?via=salescaptain', image: `${cdnBase}/66ec1b76b47be7de8fd710ec_salescaptain-website-tools_0009_instantlyapp_logo.png` },
+        { name: 'HeyReach', url: 'https://www.heyreach.io/?ref=salescaptain.io', image: `${cdnBase}/66ec1b76bac9a15cd2d9fa88_salescaptain-website-tools_0005_heyreachlogo.png` },
+        { name: 'Salesloft', url: 'https://salesloft.com/', image: `${cdnBase}/69069868634217da7e9991b8_salesloft.png` },
+        { name: 'Overloop', url: 'https://overloop.com/', image: `${cdnBase}/6906993e3d343eacde6eab6b_overloop.png` },
+        { name: 'Expandi', url: 'https://expandi.io/?ref=salescaptain.io', image: `${cdnBase}/6708f1ae42c3baa180f8d7d3_salescaptain-website-tools_0017_expandi.png` },
+        { name: 'Lemlist', url: 'https://get.lemlist.com/salescaptain', image: `${cdnBase}/66965f6907e73f8c26e60ed6_images.png` },
+        { name: 'Salesrobot', url: 'https://www.salesrobot.co/?ref=salescaptain.io', image: `${cdnBase}/67193932f0ca84d5fe931c2a_salescaptain-website-tools_0020_salesrobot.png` },
+        { name: 'Smartlead', url: 'https://smartlead.ai/?via=salescaptain', image: `${cdnBase}/668dadf76921563a5abc2b0c_Group%207750.svg` },
+        { name: 'Outreach.io', url: 'https://www.outreach.io/?ref=salescaptain.io', image: `${cdnBase}/671939321014426256086180_salescaptain-website-tools_0019_outreach.png` }
+      ]
     },
     {
-      name: 'Lemlist',
-      description: 'Multi-channel outreach platform combining email, LinkedIn, and personalization.',
-      category: 'Email Automation',
-      icon: '💌',
-      url: 'https://lemlist.com',
-      pros: ['Multi-channel sequences', 'Advanced personalization', 'Video integration'],
-      cons: ['Higher pricing', 'Complex for beginners'],
-      bestFor: 'Teams wanting personalized multi-channel email campaigns'
+      name: 'Scheduling & Automation',
+      icon: Clock,
+      color: 'purple',
+      tools: [
+        { name: 'LaGrowthMachine', url: 'https://lagrowthmachine.com/?ref=salescaptain.io', image: `${cdnBase}/6708f1bb42c3baa180f8ddcd_salescaptain-website-tools_0016_lagrowthmachine.png` },
+        { name: 'Chili Piper', url: 'https://chilipiper.com/', image: `${cdnBase}/6906b23456f332c74ee4a693_chili%20piper.png` },
+        { name: 'Calendly with AI Routing', url: 'https://calendly.com/', image: `${cdnBase}/6906b133e1097d94d375bff0_62c6f51b7a58a4aa1fb770b0.png` },
+        { name: 'Zapier AI Agents for Sales', url: 'https://zapier.com/', image: `${cdnBase}/6906b0959a041e5a9cb9ac49_zapier_800.png` },
+        { name: 'My AI Front Desk', url: 'https://www.myaifrontdesk.com/', image: `${cdnBase}/6906afa601a6337ed3ae4917_frontdesk.png` },
+        { name: 'Common Room', url: 'https://commonroom.io/?ref=salescaptain.io', image: `${cdnBase}/66ec1b7893263b1e9f2301c8_salescaptain-website-tools_0004_common-room-logo.png` },
+        { name: 'Postaga', url: 'https://postaga.com/', image: `${cdnBase}/6906a39d5709897033124379_postaga.png` },
+        { name: 'RB2B', url: 'https://www.rb2b.com/?ref=salescaptain', image: `${cdnBase}/66918d1e5473aa09b1f024f4_Group%207737.svg` },
+        { name: 'Unify', url: 'https://www.unifygtm.com/?ref=salescaptain.io&utm_source=partner&utm_medium=website&utm_campaign=salescaptain', image: `${cdnBase}/66ec1b7685cd5d237de3357e_salescaptain-website-tools_0008_unify-logo.png` },
+        { name: 'Factors', url: 'https://www.factors.ai/?ref=salescaptain.io', image: `${cdnBase}/6708f07432228d01dc1665fb_salescaptain-website-tools_0015_factors.png` }
+      ]
     },
     {
-      name: 'Reply.io',
-      description: 'Email automation with multi-channel support and unified inbox management.',
-      category: 'Email Automation',
-      icon: '↩️',
-      url: 'https://reply.io',
-      pros: ['Multi-channel support', 'Unified inbox', 'Good integrations'],
-      cons: ['Pricing can add up', 'Learning curve'],
-      bestFor: 'SMB teams wanting email automation with social media integration'
-    }
-  ]
-
-  const contentAITools = [
-    {
-      name: 'Lavender',
-      description: 'Real-time email coach that scores drafts and suggests improvements for better replies.',
-      category: 'Content & AI',
-      icon: '💜',
-      url: 'https://www.lavender.ai',
-      pros: ['Real-time feedback', 'Easy integration', 'Improves reply rates'],
-      cons: ['Subscription required', 'Limited customization'],
-      bestFor: 'Sales reps wanting to improve email writing and response rates'
+      name: 'Conversation Intelligence',
+      icon: MessageSquare,
+      color: 'orange',
+      tools: [
+        { name: 'Gong.io', url: 'https://gong.io/', image: `${cdnBase}/69069d4940644487cf7964d0_gong.io.png` },
+        { name: 'Chorus.ai', url: 'https://chorus.ai/', image: `${cdnBase}/69069e32f75dbfb08f2217ba_chorus.png` },
+        { name: 'Avoma', url: 'https://www.avoma.com/', image: `${cdnBase}/69069f07db3e610fc45f7068_avoma.png` },
+        { name: 'Fireflies.ai', url: 'https://fireflies.ai/', image: `${cdnBase}/6906a084b47331a4d72708f8_fireflies.png` },
+        { name: 'Dialpad AI', url: 'https://www.dialpad.com/', image: `${cdnBase}/6906a09b24e5d6c80e68f8bc_dialpad.png` }
+      ]
     },
     {
-      name: 'Copy.ai',
-      description: 'AI-powered content generation for email campaigns, subject lines, and sequences.',
-      category: 'Content & AI',
-      icon: '✍️',
-      url: 'https://www.copy.ai',
-      pros: ['Versatile content creation', 'Multiple templates', 'Easy to use'],
-      cons: ['Generic output sometimes', 'Requires editing'],
-      bestFor: 'Marketing teams needing quick email content generation'
+      name: 'CRM and Pipeline Management',
+      icon: Settings,
+      color: 'indigo',
+      tools: [
+        { name: 'Salesforce Einstein', url: 'https://help.salesforce.com/s/products/einstein?language=en_US', image: `${cdnBase}/6906b368570989703313360c_salesforce.png` },
+        { name: 'HubSpot Sales Hub', url: 'https://www.hubspot.com/products/sales', image: `${cdnBase}/6906b42769261d0557c987b7_hubspot%20saleshub.png` },
+        { name: 'Microsoft Dynamics 365', url: 'https://www.microsoft.com/en-us/dynamics-365', image: `${cdnBase}/6906b4d8310df2b561094aa4_Dynamics-365-logo-500x281.png` },
+        { name: 'Pipedrive AI', url: 'https://www.pipedrive.com/en/products/ai-crm', image: `${cdnBase}/6906b59a7e0f8dd43bd3bc94_pipedrive%20ai.png` },
+        { name: 'Clari', url: 'https://www.clari.com/', image: `${cdnBase}/6906b626b9b9022ffec386d4_clari.png` }
+      ]
     },
     {
-      name: 'Jasper',
-      description: 'Advanced AI writing assistant with brand voice training for consistent email content.',
-      category: 'Content & AI',
-      icon: '🤖',
-      url: 'https://www.jasper.ai',
-      pros: ['Brand voice consistency', 'Advanced AI', 'Multiple formats'],
-      cons: ['Higher cost', 'Learning curve'],
-      bestFor: 'Enterprise teams maintaining consistent brand voice across email campaigns'
-    },
-    {
-      name: 'Crystal',
-      description: 'Personality insights platform for tailoring email tone and approach to recipients.',
-      category: 'Content & AI',
-      icon: '💎',
-      url: 'https://www.crystalknows.com',
-      pros: ['Personality insights', 'Tone recommendations', 'Integration friendly'],
-      cons: ['Limited data coverage', 'Niche use case'],
-      bestFor: 'Sales teams doing high-touch, personalized email outreach'
-    }
-  ]
-
-  const analyticsTools = [
-    {
-      name: 'Mixpanel',
-      description: 'Advanced analytics platform for tracking email campaign performance and user behavior.',
-      category: 'Analytics & Optimization',
-      icon: '📊',
-      url: 'https://mixpanel.com',
-      pros: ['Deep behavioral analytics', 'Custom events', 'Cohort analysis'],
-      cons: ['Complex setup', 'Higher pricing'],
-      bestFor: 'Growth teams needing detailed email campaign and user journey analytics'
-    },
-    {
-      name: 'Amplitude',
-      description: 'Product analytics platform with email campaign tracking and conversion analysis.',
-      category: 'Analytics & Optimization',
-      icon: '📈',
-      url: 'https://amplitude.com',
-      pros: ['User journey tracking', 'Conversion funnels', 'Retention analysis'],
-      cons: ['Learning curve', 'Expensive for small teams'],
-      bestFor: 'Product-led growth teams tracking email impact on user activation'
-    },
-    {
-      name: 'Google Analytics 4',
-      description: 'Free analytics platform with email campaign tracking and attribution modeling.',
-      category: 'Analytics & Optimization',
-      icon: '🔍',
-      url: 'https://analytics.google.com',
-      pros: ['Free to use', 'Comprehensive tracking', 'Integration ecosystem'],
-      cons: ['Complex interface', 'Privacy limitations'],
-      bestFor: 'All teams wanting basic to advanced email campaign performance tracking'
-    },
-    {
-      name: 'Hotjar',
-      description: 'User behavior analytics with heatmaps and session recordings for email landing pages.',
-      category: 'Analytics & Optimization',
-      icon: '🔥',
-      url: 'https://www.hotjar.com',
-      pros: ['Visual insights', 'Easy setup', 'Affordable'],
-      cons: ['Limited to website behavior', 'Basic analytics'],
-      bestFor: 'Teams optimizing email landing pages and conversion flows'
+      name: 'Content & Messaging Assistants',
+      icon: Brain,
+      color: 'pink',
+      tools: [
+        { name: 'Lavender', url: 'https://www.lavender.ai/', image: `${cdnBase}/6906b8346ea665d3cb84b0f5_lavender.png` },
+        { name: 'Regie.ai', url: 'https://www.regie.ai/', image: `${cdnBase}/6906b89944f231d45ff5f8c9_regie.png` },
+        { name: 'Crystal', url: 'https://www.crystalknows.com/?utm_source=hubspot&utm_content=nav', image: `${cdnBase}/6906ba6f3d343eacde7168c3_Icon%20Full%20Color.png` },
+        { name: 'jasper', url: 'https://www.jasper.ai/', image: `${cdnBase}/6906bb6256aaa88568348f80_Jasper%2520Logo%2520(2025).webp` },
+        { name: 'Copy.ai', url: 'https://copy.ai/', image: `${cdnBase}/6906bc1a9b42ba9bb51926b8_idhj7Th-aL_logos.png` }
+      ]
     }
   ]
 
@@ -294,261 +214,56 @@ export default function IntegrationsPage() {
               Best AI Email Marketing Tools by Category
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Detailed breakdown of the top tools in each category to help you build the perfect email marketing stack.
+              Comprehensive collection of the top tools in each category to help you build the perfect email marketing stack.
             </p>
           </div>
 
-          {/* Data & Prospecting Tools */}
-          <div className="mb-16">
-            <div className="flex items-center mb-8">
-              <Database className="h-8 w-8 text-blue-600 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900">Data & Prospecting Platforms</h3>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {dataProspectingTools.map((tool, index) => (
-                <a
-                  key={index}
-                  href={tool.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-blue-200 transition-all duration-200 block"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-3xl">{tool.icon}</div>
-                      <div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h4>
-                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                          {tool.category}
-                        </span>
-                      </div>
-                    </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400 hover:text-blue-600 transition-colors" />
-                  </div>
-                  <p className="text-gray-600 mb-4">{tool.description}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <h5 className="text-sm font-semibold text-green-700 mb-2">Pros</h5>
-                      <ul className="space-y-1">
-                        {tool.pros.map((pro, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />
-                            {pro}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h5 className="text-sm font-semibold text-red-700 mb-2">Cons</h5>
-                      <ul className="space-y-1">
-                        {tool.cons.map((con, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <span className="h-3 w-3 bg-red-500 rounded-full mr-2 flex-shrink-0"></span>
-                            {con}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <h5 className="text-sm font-semibold text-gray-900 mb-1">Best For:</h5>
-                    <p className="text-sm text-gray-600">{tool.bestFor}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
+          {toolCategories.map((category, categoryIndex) => {
+            const IconComponent = category.icon
+            const colorClasses = {
+              blue: 'text-blue-600 border-blue-200 hover:border-blue-400 hover:bg-blue-50',
+              green: 'text-green-600 border-green-200 hover:border-green-400 hover:bg-green-50',
+              purple: 'text-purple-600 border-purple-200 hover:border-purple-400 hover:bg-purple-50',
+              orange: 'text-orange-600 border-orange-200 hover:border-orange-400 hover:bg-orange-50',
+              indigo: 'text-indigo-600 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50',
+              pink: 'text-pink-600 border-pink-200 hover:border-pink-400 hover:bg-pink-50'
+            }
+            const colorClass = colorClasses[category.color as keyof typeof colorClasses] || colorClasses.blue
 
-          {/* Email Automation Tools */}
-          <div className="mb-16">
-            <div className="flex items-center mb-8">
-              <Mail className="h-8 w-8 text-green-600 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900">Email Automation Platforms</h3>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {emailAutomationTools.map((tool, index) => (
-                <a
-                  key={index}
-                  href={tool.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-green-200 transition-all duration-200 block"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-3xl">{tool.icon}</div>
-                      <div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h4>
-                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                          {tool.category}
-                        </span>
+            return (
+              <div key={categoryIndex} className="mb-16">
+                <div className="flex items-center mb-6">
+                  <IconComponent className={`h-7 w-7 ${colorClass.split(' ')[0]} mr-3`} />
+                  <h3 className="text-2xl font-bold text-gray-900">{category.name}</h3>
+                  <span className="ml-4 text-sm text-gray-500">({category.tools.length} tools)</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {category.tools.map((tool, toolIndex) => (
+                    <a
+                      key={toolIndex}
+                      href={tool.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`group bg-white p-4 rounded-lg border-2 ${colorClass} transition-all duration-200 flex flex-col items-center text-center hover:shadow-lg`}
+                    >
+                      <div className="w-16 h-16 mb-3 flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden">
+                        <img
+                          src={tool.image}
+                          alt={tool.name}
+                          className="w-full h-full object-contain p-2"
+                          loading="lazy"
+                        />
                       </div>
-                    </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400 hover:text-green-600 transition-colors" />
-                  </div>
-                  <p className="text-gray-600 mb-4">{tool.description}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <h5 className="text-sm font-semibold text-green-700 mb-2">Pros</h5>
-                      <ul className="space-y-1">
-                        {tool.pros.map((pro, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />
-                            {pro}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h5 className="text-sm font-semibold text-red-700 mb-2">Cons</h5>
-                      <ul className="space-y-1">
-                        {tool.cons.map((con, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <span className="h-3 w-3 bg-red-500 rounded-full mr-2 flex-shrink-0"></span>
-                            {con}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <h5 className="text-sm font-semibold text-gray-900 mb-1">Best For:</h5>
-                    <p className="text-sm text-gray-600">{tool.bestFor}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Content & AI Tools */}
-          <div className="mb-16">
-            <div className="flex items-center mb-8">
-              <Brain className="h-8 w-8 text-purple-600 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900">Content & AI Writing Tools</h3>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {contentAITools.map((tool, index) => (
-                <a
-                  key={index}
-                  href={tool.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-purple-200 transition-all duration-200 block"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-3xl">{tool.icon}</div>
-                      <div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h4>
-                        <span className="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-                          {tool.category}
-                        </span>
-                      </div>
-                    </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400 hover:text-purple-600 transition-colors" />
-                  </div>
-                  <p className="text-gray-600 mb-4">{tool.description}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <h5 className="text-sm font-semibold text-green-700 mb-2">Pros</h5>
-                      <ul className="space-y-1">
-                        {tool.pros.map((pro, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />
-                            {pro}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h5 className="text-sm font-semibold text-red-700 mb-2">Cons</h5>
-                      <ul className="space-y-1">
-                        {tool.cons.map((con, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <span className="h-3 w-3 bg-red-500 rounded-full mr-2 flex-shrink-0"></span>
-                            {con}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <h5 className="text-sm font-semibold text-gray-900 mb-1">Best For:</h5>
-                    <p className="text-sm text-gray-600">{tool.bestFor}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Analytics Tools */}
-          <div className="mb-16">
-            <div className="flex items-center mb-8">
-              <Settings className="h-8 w-8 text-orange-600 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900">Analytics & Optimization Tools</h3>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {analyticsTools.map((tool, index) => (
-                <a
-                  key={index}
-                  href={tool.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-orange-200 transition-all duration-200 block"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-3xl">{tool.icon}</div>
-                      <div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-2">{tool.name}</h4>
-                        <span className="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full">
-                          {tool.category}
-                        </span>
-                      </div>
-                    </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400 hover:text-orange-600 transition-colors" />
-                  </div>
-                  <p className="text-gray-600 mb-4">{tool.description}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <h5 className="text-sm font-semibold text-green-700 mb-2">Pros</h5>
-                      <ul className="space-y-1">
-                        {tool.pros.map((pro, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />
-                            {pro}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h5 className="text-sm font-semibold text-red-700 mb-2">Cons</h5>
-                      <ul className="space-y-1">
-                        {tool.cons.map((con, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-center">
-                            <span className="h-3 w-3 bg-red-500 rounded-full mr-2 flex-shrink-0"></span>
-                            {con}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <h5 className="text-sm font-semibold text-gray-900 mb-1">Best For:</h5>
-                    <p className="text-sm text-gray-600">{tool.bestFor}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
+                      <h4 className="text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-2">
+                        {tool.name}
+                      </h4>
+                      <ExternalLink className="h-3 w-3 text-gray-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
         </div>
       </section>
 
