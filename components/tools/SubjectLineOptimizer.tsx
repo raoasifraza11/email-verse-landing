@@ -30,6 +30,9 @@ interface AnalysisResult {
   improvements: string[]
   flaggedWords: string[]
   strengths: string[]
+  highlightedSubject: string
+  subjectLength: string
+  spamWordCount: string
 }
 
 const industries = ["Technology", "Healthcare", "Finance", "Retail", "Real Estate", "Education", "Marketing", "Consulting"]
@@ -55,33 +58,101 @@ export default function SubjectLineOptimizer() {
     setIsAnalyzing(false)
   }
 
+  // Word lists from spam checker (same logic)
+  const shadyWords = ["0 down","Addresses","Addresses on cd","All","All natural","All natural/new","All new","All-natural","All-new","Allowance","As seen on","As seen on Oprah","At no cost","Auto email removal","Avoice bankruptcy","Avoid","Beneficial offer","Billing","Billing Address","Brand new pager","Bulk email","Cable converter","Calling creditors","Can you help us?","Cancel at any time","Cannot be combined","Casino","Celebrity","Cell phone cancer scam","Certified","Chance","Cheap","Cheap meds","Cialis","Clearance","Collect","Collect child support","Compare","Compare now","Compare online","Compare rates","Compete for your business","Confidentiality","Confidentiality on all orders","Congratulations","Consolidate debt and credit","Consolidate your debt","Copy accurately","Copy DVDs","COVID","Credit bureaus","Cures","Cures baldness","Dig up dirt on friends","Direct email","Direct marketing","Eliminate debt","Explode your business","Fast viagra delivery","Finance","Financial","Financial advice","Financial independence","Financially independent","For new customers only","Foreclosure","Free","Free access/money/gift","Free bonus","Free cell phone","Free DVD","Free grant money","Free information","Free installation","Free offer","Free priority mail","Free sample","Free website","Free!","Get","Gift card","Gift certificate","Gift included","Give it away","Giving away","Giving it away","Gold","Great","Great deal","Greetings of the day","Growth hormone","Guarantee","Guaranteed deposit","Guaranteed income","Guaranteed payment","Have you been turned down?","Hello (with no name included)","Hidden","Hidden assets","Hidden charges","Hidden costs","Hidden fees","High score","Home based business","Home mortgage","Human","Human growth hormone","If only it were that easy","Important information","Important notification","In accordance with laws","Instant weight loss","Insurance Lose weight","Internet marketing","Investment decision","Invoice","It's effective","Job alert","Junk","Lambo","Laser printer","Last Day","Leave","Legal","Legal notice","Life","Life insurance","Lifetime access","Lifetime deal","Limited","Limited amount","Limited number","Limited offer","Limited supply","Limited time offer","Limited time only","Loan"]
+
+  const urgencyWords = ["Access now","Act","Act immediately","Act now","Act now!","Action","Action required","Apply here","Apply now","Apply now!","Apply online","Become a member","Before it's too late","Buy","Buy direct","Buy now","Buy today","Call","Call free","Call free/now","Call me","Call now","Call now!","Can we have a minute of your time?","Cancel now","Cancellation required","Claim now","Click","Click below","Click here","Click me to download","Click now","Click this link","Click to get","Click to remove","Contact us immediately","Deal ending soon","Do it now","Do it today","Don't delete","Don't hesitate","Don't waste time","Don't delete","Exclusive deal","Expire","Expires today","Final call","For instant access","For Only","For you","Friday before [holiday]","Get it away","Get it now","Get now","Get started","Get started now","Great offer","Here","Hurry up","Immediately","Important information regarding","Info you requested","Information you requested","Instant","Limited time","New customers only","Now","Now only","Offer expires","Once in lifetime","Only","Order now","Order today","Please read","Purchase now","Sign up free","Sign up free today","Supplies are limited","Take action","Take action now","This won't last","Time limited","Today","Top urgent","Trial","Urgent","What are you waiting for?","While supplies last","You are a winner"]
+
+  const exaggeratedWords = ["$","#1","%","% free","% Satisfied","0%","0% risk","100%","100% free","100% more","100% off","100% satisfied","90%","99%","Access for free","Additional income","Amazed","Please","perfect","Amazing","Amazing offer","Amazing stuff","Be amazed","Be surprised","Be your own boss","Believe me","Best bargain","Best deal","Best offer","Best price","Best rates","Big bucks","Billion","Billion Dollars","Bonus","Boss","Can't live without","Cancel","Cash","Cash bonus","Cashcashcash","Consolidate debt","Double your","Double your cash","Double your income","Drastically reduced","Earn","Earn $","Earn Cash","Earn extra cash","Earn money","Earn per week","Eliminate bad credit","Expect to earn","Extra","Extra cash","Extra income","Fantastic","Fantastic deal","Fantastic offer","FAST","Fast cash","Financial freedom","Free access","Free consultation","Free gift","Free hosting","Free info","Free investment","Free membership","Free money","Free preview","Free quote","Free trial","Full refund","Get out of debt","Get paid","Giveaway","Guaranteed","Income","Income from home","Increase sales","Increase traffic","Incredible deal","Join billions","Join millions","Join millions of Americans","Join thousands","Lower monthly payments","Lower rates","Lowest price","Make $","Make money","Million","Million dollars","Money back","Money making","Month trial offer","More Internet Traffic","Multilevel marketing","No gimmicks","Number one","Once in a lifetime","One hundred percent guaranteed","One time","Pennies a day","Potential earnings","Prize","Promise","Pure profit","Risk-free","Satisfaction guaranteed","Save big money","Save up to","Serious cash","Special promotion","The best","Thousands","Unbeatable offer","Unbelievable","Unlimited","Unlimited trial","Warranty","Web traffic","Work from home"]
+
+  const combinedTerms: { term: string; category: string }[] = []
+  
+  const addTerms = (list: string[], category: string) => {
+    list.forEach(term => {
+      combinedTerms.push({ term, category })
+    })
+  }
+
+  addTerms(shadyWords, "shady")
+  addTerms(urgencyWords, "urgency")
+  addTerms(exaggeratedWords, "exaggerated")
+
+  // Sort by descending term length to prioritize longer matches
+  combinedTerms.sort((a, b) => b.term.length - a.term.length)
+
+  const patternParts = combinedTerms.map(item => {
+    if (item.term === "$") {
+      return "\\$"
+    } else {
+      // Escape special regex characters and handle multi-word phrases
+      let escaped = item.term.split(/\s+/).map(word => 
+        word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      ).join("[\\s\\-]+")
+      // Use word boundaries - they work at word/non-word boundaries
+      return "\\b" + escaped + "\\b"
+    }
+  })
+
+  const combinedRegex = new RegExp(patternParts.join("|"), "gi")
+
+  const normalize = (text: string): string => {
+    return text.toLowerCase().replace(/[\s\-]+/g, "")
+  }
+
+  const getCategory = (match: string): string => {
+    const normMatch = normalize(match)
+    for (const item of combinedTerms) {
+      if (normalize(item.term) === normMatch) {
+        return item.category
+      }
+    }
+    return ""
+  }
+
+  const highlightText = (text: string): string => {
+    return text.replace(combinedRegex, function(match: string) {
+      const category = getCategory(match)
+      return `<span class="${category}">${match}</span>`
+    })
+  }
+
   const generateAnalysis = (subject: string, industry: string, type: string): AnalysisResult => {
     const words = subject.toLowerCase().split(' ')
     const length = subject.length
     
-    // Spam words detection
-    const spamWords = ['free', 'urgent', 'limited time', 'act now', 'click here', 'guarantee', 'no risk', 'winner', 'cash', 'money']
-    const flaggedWords = words.filter(word => spamWords.some(spam => word.includes(spam)))
+    // Use spam checker logic to detect spam words
+    const subjectMatches: string[] = subject.match(combinedRegex) || []
+    const flaggedWords = [...new Set(subjectMatches)] // Remove duplicates
     
-    // Calculate scores
-    let score = 75 // Base score
-    let spamScore = 15 // Base spam score
+    // Count per category (same as spam checker)
+    let countShady = 0, countUrgency = 0, countExaggerated = 0
+    subjectMatches.forEach(match => {
+      const category = getCategory(match)
+      if (category === "shady") countShady++
+      else if (category === "urgency") countUrgency++
+      else if (category === "exaggerated") countExaggerated++
+    })
+    
+    // Calculate score using spam checker formula (subject line only, no email content)
+    let reducedScore = 100 - (countShady * 3 + countUrgency * 15 + countExaggerated * 10)
+    if (reducedScore < 30) reducedScore = 30
+    
+    // Convert to 0-100 scale for display (invert: higher is better)
+    let score = reducedScore
+    let spamScore = 100 - reducedScore // Spam score: higher = more spammy
     
     // Length analysis
+    const subjectWords = subject.trim().split(/\s+/).filter(Boolean)
     let lengthCategory: 'optimal' | 'too_short' | 'too_long' = 'optimal'
-    if (length < 20) {
+    if (subjectWords.length > 5) {
+      lengthCategory = 'too_long'
+      score -= 10
+    } else if (subjectWords.length < 3) {
       lengthCategory = 'too_short'
       score -= 10
-    } else if (length > 60) {
-      lengthCategory = 'too_long'
-      score -= 15
     } else {
-      score += 10
+      score += 5 // Bonus for optimal length
     }
-    
-    // Spam word penalties
-    spamScore += flaggedWords.length * 15
-    score -= flaggedWords.length * 10
     
     // Positive indicators
     const positiveWords = ['new', 'exclusive', 'update', 'tips', 'guide', 'insights', 'results']
@@ -106,6 +177,18 @@ export default function SubjectLineOptimizer() {
     const sentiment: 'positive' | 'neutral' | 'negative' = 
       score > 80 ? 'positive' : score > 60 ? 'neutral' : 'negative'
     
+    // Get highlighted subject line
+    const highlightedSubject = highlightText(subject)
+    
+    // Subject length text (same format as spam checker)
+    let subjectLengthText = subjectWords.length + " words"
+    if (subjectWords.length > 5) subjectLengthText += " ❌ (Bad)"
+    else if (subjectWords.length >= 3) subjectLengthText += " ✅ (Good)"
+    
+    // Spam word count text
+    const totalSpamWords = subjectMatches.length
+    const spamWordCountText = totalSpamWords === 0 ? totalSpamWords + " ✅ (Good)" : totalSpamWords + " ❌ (Bad)"
+    
     // Generate suggestions
     const suggestions = []
     const improvements = []
@@ -122,8 +205,8 @@ export default function SubjectLineOptimizer() {
     }
     
     if (flaggedWords.length > 0) {
-      suggestions.push("Remove spam-trigger words to improve deliverability")
-      improvements.push(`Avoid words like: ${flaggedWords.join(', ')}`)
+      suggestions.push("Review and replace highlighted spammy words to improve deliverability")
+      improvements.push(`Remove words like: ${flaggedWords.slice(0, 3).join(', ')}`)
     }
     
     if (!subject.includes('?') && type === 'Newsletter') {
@@ -157,7 +240,10 @@ export default function SubjectLineOptimizer() {
       suggestions,
       improvements,
       flaggedWords,
-      strengths
+      strengths,
+      highlightedSubject,
+      subjectLength: subjectLengthText,
+      spamWordCount: spamWordCountText
     }
   }
 
@@ -347,6 +433,53 @@ export default function SubjectLineOptimizer() {
                     </CardContent>
                   </Card>
                 </div>
+
+                {/* Highlighted Subject Line */}
+                <Card className="shadow-lg">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Processed Subject Line</h3>
+                    <div 
+                      className="p-4 bg-gray-50 rounded-lg border text-lg"
+                      dangerouslySetInnerHTML={{ __html: result.highlightedSubject }}
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Analysis Report */}
+                <Card className="shadow-lg">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">📌 Analysis Report</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span className="font-medium text-gray-700">Subject Length:</span>
+                        <span className="font-semibold">{result.subjectLength}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span className="font-medium text-gray-700">Spammy Words:</span>
+                        <span className="font-semibold">{result.spamWordCount}</span>
+                      </div>
+                    </div>
+
+                    {/* Color Guide */}
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">📌 Word Color Guide:</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
+                          <div className="w-4 h-4 bg-gray-500 rounded"></div>
+                          <span className="text-xs"><strong>Grey:</strong> Shady Words – Better to replace</span>
+                        </div>
+                        <div className="flex items-center space-x-2 p-2 bg-red-50 rounded-lg">
+                          <div className="w-4 h-4 bg-red-500 rounded"></div>
+                          <span className="text-xs"><strong>Red:</strong> Urgency Words – Should be removed</span>
+                        </div>
+                        <div className="flex items-center space-x-2 p-2 bg-orange-50 rounded-lg">
+                          <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                          <span className="text-xs"><strong>Orange:</strong> Exaggerated Words – Consider modifying</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 {/* Analysis Details */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
