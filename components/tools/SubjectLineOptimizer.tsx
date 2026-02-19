@@ -122,7 +122,7 @@ export default function SubjectLineOptimizer() {
     
     // Use spam checker logic to detect spam words
     const subjectMatches: string[] = subject.match(combinedRegex) || []
-    const flaggedWords = [...new Set(subjectMatches)] // Remove duplicates
+    const flaggedWords = Array.from(new Set(subjectMatches)) // Remove duplicates
     
     // Count per category (same as spam checker)
     let countShady = 0, countUrgency = 0, countExaggerated = 0
@@ -168,6 +168,12 @@ export default function SubjectLineOptimizer() {
     // Numbers
     if (/\d/.test(subject)) score += 5
     
+    // If 2 or more bad words, keep score low (5–8%)
+    if (flaggedWords.length >= 2) {
+      score = Math.min(score, 5 + Math.random() * 3) // 5 to 8
+      spamScore = 100 - score
+    }
+
     // Ensure scores are within bounds
     score = Math.max(0, Math.min(100, score))
     spamScore = Math.max(0, Math.min(100, spamScore))
@@ -460,7 +466,7 @@ export default function SubjectLineOptimizer() {
                       </div>
                     </div>
 
-                    {/* Color Guide */}
+                    {/* Color Guide - First option kept as-is */}
                     <div>
                       <h4 className="text-sm font-semibold text-gray-900 mb-3">📌 Word Color Guide:</h4>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -477,6 +483,33 @@ export default function SubjectLineOptimizer() {
                           <span className="text-xs"><strong>Orange:</strong> Exaggerated Words – Consider modifying</span>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Tips for better subject lines */}
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">📌 Tips for better subject lines:</h4>
+                      <ul className="space-y-2 text-sm text-gray-700">
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary-500 mt-0.5">•</span>
+                          <span><strong>Keep it 3–7 words (30–50 characters)</strong> — Fits mobile screens and avoids looking like a long sales pitch.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary-500 mt-0.5">•</span>
+                          <span><strong>Use simple, natural words</strong> — Write like a human, not a marketer. Avoid words like free, offer, discount, guarantee, buy now.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary-500 mt-0.5">•</span>
+                          <span><strong>Mention the reader’s situation</strong> — Add their role, industry, or problem so it feels written just for them.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary-500 mt-0.5">•</span>
+                          <span><strong>Focus on one clear idea</strong> — Don’t mix multiple things. One subject line = one promise or one curiosity.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary-500 mt-0.5">•</span>
+                          <span><strong>End with curiosity or benefit</strong> — Either hint at a result or leave a small gap that makes them want to open.</span>
+                        </li>
+                      </ul>
                     </div>
                   </CardContent>
                 </Card>
@@ -557,34 +590,6 @@ export default function SubjectLineOptimizer() {
                     </CardContent>
                   </Card>
                 )}
-
-                {/* Quick Actions */}
-                <Card className="shadow-lg">
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-                    <div className="flex flex-wrap gap-3">
-                      <Button
-                        variant="outline"
-                        onClick={() => copyToClipboard(subjectLine)}
-                        className="flex items-center space-x-2"
-                      >
-                        <Copy className="h-4 w-4" />
-                        <span>Copy Subject Line</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setSubjectLine("")
-                          setResult(null)
-                        }}
-                        className="flex items-center space-x-2"
-                      >
-                        <RefreshCw className="h-4 w-4" />
-                        <span>Analyze Another</span>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
             )}
           </div>

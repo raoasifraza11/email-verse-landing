@@ -216,8 +216,8 @@ export default function ROICalculator() {
   const handleNumberSubmit = () => {
     const value = parseFloat(currentInput)
     const currentQuestion = questions[chatState.currentStep]
-    
-    if (!value || !currentQuestion || currentQuestion.type !== 'number' || !currentQuestion.validation(value)) {
+    const isValidNumber = typeof value === 'number' && Number.isFinite(value)
+    if (!currentQuestion || currentQuestion.type !== 'number' || !isValidNumber || !currentQuestion.validation(value)) {
       return
     }
 
@@ -316,12 +316,11 @@ export default function ROICalculator() {
     const totalEmailsPerDay = (emailsPerDay || 0) * (sequences || 1)
     const domainsNeeded = Math.ceil(totalEmailsPerDay / 30)
     
-    // Domain cost: $10/domain/year (show separately as annual)
+    // Domain cost: $10/domain/year — one-time (annual), not included in monthly cost
     const domainCostYearly = domainsNeeded * 10
-    const domainCostMonthly = domainCostYearly / 12 // For monthly cost calculation only
-    
-    // VPS cost: $5/vps/month (1 VPS can handle 10 domains)
-    const vpsCount = Math.ceil(domainsNeeded / 10)
+
+    // VPS cost: $5/vps/month — 1 VPS per domain (domain count = VPS count)
+    const vpsCount = domainsNeeded
     const vpsCostMonthly = vpsCount * 5
 
     // Warming cost: Premium $19/domain/month OR Built-in (free)
@@ -346,8 +345,8 @@ export default function ROICalculator() {
       }
     }
 
-    // Total monthly cost (excluding one-time Mailwizz cost)
-    const totalMonthlyCost = vpsCostMonthly + warmingCost + apiCost + toolCost + configCost + domainCostMonthly
+    // Total monthly cost (domain is one-time annual, not included)
+    const totalMonthlyCost = vpsCostMonthly + warmingCost + apiCost + toolCost + configCost
 
     // Industry-specific open rates (from provided table)
     const industryRates: Record<string, number> = {
@@ -363,42 +362,49 @@ export default function ROICalculator() {
     const openRate = industryRates[industry || 'saas'] || 0.39
     const opens = Math.round(uniqueVolume * openRate)
     
-    // Reply rate logic: 6% of opens if sequences ≥ 3, else 4% of opens
-    const replyRate = (sequences || 1) >= 3 ? 0.06 : 0.04
+    // Reply rate logic: 6% of opens if sequences ≥ 3, else 4%. Double (12% / 8%) if Premium Mailboxes selected.
+    const baseReplyRate = (sequences || 1) >= 3 ? 0.06 : 0.04
+    const replyRate = premiumMailboxes === 'yes' ? baseReplyRate * 2 : baseReplyRate
     const replies = Math.round(opens * replyRate)
     
     // Positive response rate: 11% of replies if sequences > 3, else 5% of replies
     const positiveRate = (sequences || 1) > 3 ? 0.11 : 0.05
     const positives = Math.round(replies * positiveRate)
-    
-    const monthlyRevenue = positives * (productPrice || 0)
+
+    const safeProductPrice = Number(productPrice)
+    const price = Number.isFinite(safeProductPrice) && safeProductPrice >= 0 ? safeProductPrice : 0
+    const monthlyRevenue = positives * price
     const annualRevenue = monthlyRevenue * 12
     const monthlyProfit = monthlyRevenue - totalMonthlyCost
     const annualProfit = monthlyProfit * 12
-    const roiPercent = totalMonthlyCost > 0 ? ((monthlyProfit / totalMonthlyCost) * 100).toFixed(1) : '0'
+    const roiNum = totalMonthlyCost > 0 ? (monthlyProfit / totalMonthlyCost) * 100 : 0
+    const roiPercent = Number.isFinite(roiNum) ? roiNum.toFixed(1) : '0'
 
     return {
       domainsNeeded,
       domainCostYearly,
-      vpsCostMonthly,
-      warmingCost,
-      apiCost,
-      toolCost,
-      configCost,
-      totalMonthlyCost,
-      uniqueVolume,
-      totalVolume,
-      opens,
-      replies,
-      positives,
-      monthlyRevenue,
-      annualRevenue,
-      monthlyProfit,
-      annualProfit,
+      vpsCostMonthly: Number.isFinite(vpsCostMonthly) ? vpsCostMonthly : 0,
+      warmingCost: Number.isFinite(warmingCost) ? warmingCost : 0,
+      apiCost: Number.isFinite(apiCost) ? apiCost : 0,
+      toolCost: Number.isFinite(toolCost) ? toolCost : 0,
+      configCost: Number.isFinite(configCost) ? configCost : 0,
+      totalMonthlyCost: Number.isFinite(totalMonthlyCost) ? totalMonthlyCost : 0,
+      uniqueVolume: Number.isFinite(uniqueVolume) ? uniqueVolume : 0,
+      totalVolume: Number.isFinite(totalVolume) ? totalVolume : 0,
+      opens: Number.isFinite(opens) ? opens : 0,
+      replies: Number.isFinite(replies) ? replies : 0,
+      positives: Number.isFinite(positives) ? positives : 0,
+      monthlyRevenue: Number.isFinite(monthlyRevenue) ? monthlyRevenue : 0,
+      annualRevenue: Number.isFinite(annualRevenue) ? annualRevenue : 0,
+      monthlyProfit: Number.isFinite(monthlyProfit) ? monthlyProfit : 0,
+      annualProfit: Number.isFinite(annualProfit) ? annualProfit : 0,
       roiPercent,
       premiumMailboxes: premiumMailboxes === 'yes'
     }
   }
+
+  const fmt = (n: number) => (Number.isFinite(n) ? n.toLocaleString() : '0')
+  const fmtPct = (s: string) => (s != null && s !== '' && !Number.isNaN(Number(s)) ? s : '0')
 
   const resetCalculator = () => {
     setChatState({
@@ -604,19 +610,19 @@ export default function ROICalculator() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                   <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-green-600 mb-1">{report.roiPercent}%</div>
+                      <div className="text-3xl font-bold text-green-600 mb-1">{fmtPct(report.roiPercent)}%</div>
                       <div className="text-sm font-medium text-green-700">Monthly ROI</div>
                     </div>
                   </div>
                   <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-blue-600 mb-1">${report.monthlyProfit.toLocaleString()}</div>
+                      <div className="text-3xl font-bold text-blue-600 mb-1">${fmt(report.monthlyProfit)}</div>
                       <div className="text-sm font-medium text-blue-700">Monthly Profit</div>
                     </div>
                   </div>
                   <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-purple-600 mb-1">${report.annualProfit.toLocaleString()}</div>
+                      <div className="text-3xl font-bold text-purple-600 mb-1">${fmt(report.annualProfit)}</div>
                       <div className="text-sm font-medium text-purple-700">Annual Profit</div>
                     </div>
                   </div>
@@ -643,15 +649,15 @@ export default function ROICalculator() {
                       </div>
                       <div className="border-b pb-2 mb-2">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Domain Cost (Annual):</span>
-                          <span className="font-semibold text-gray-900">${report.domainCostYearly.toLocaleString()}/year</span>
+                          <span className="text-gray-600">Domain (one-time cost):</span>
+                          <span className="font-semibold text-gray-900">${report.domainCostYearly.toLocaleString()}</span>
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
-                          (${(report.domainCostYearly / 12).toFixed(2)}/month)
+                          Annual, not included in monthly cost
                         </div>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">VPS Cost:</span>
+                        <span className="text-gray-600">VPS cost ($5/vps/month):</span>
                         <span className="font-semibold text-gray-900">${report.vpsCostMonthly}/month</span>
                       </div>
                       <div className="flex justify-between">
@@ -726,7 +732,7 @@ export default function ROICalculator() {
                     </h3>
                     <div className="space-y-4">
                       <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                        <div className="text-2xl font-bold text-green-600 mb-1">${report.monthlyRevenue.toLocaleString()}</div>
+                        <div className="text-2xl font-bold text-green-600 mb-1">${fmt(report.monthlyRevenue)}</div>
                         <div className="text-sm text-green-700">Monthly Revenue</div>
                       </div>
                       <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200">
@@ -734,11 +740,11 @@ export default function ROICalculator() {
                         <div className="text-sm text-red-700">Monthly Costs</div>
                       </div>
                       <div className="text-center p-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg">
-                        <div className="text-2xl font-bold mb-1">${report.monthlyProfit.toLocaleString()}</div>
+                        <div className="text-2xl font-bold mb-1">${fmt(report.monthlyProfit)}</div>
                         <div className="text-sm opacity-90">Net Monthly Profit</div>
                       </div>
                       <div className="text-center p-3 bg-purple-50 rounded-lg border border-purple-200">
-                        <div className="text-lg font-bold text-purple-600">${report.annualProfit.toLocaleString()}</div>
+                        <div className="text-lg font-bold text-purple-600">${fmt(report.annualProfit)}</div>
                         <div className="text-xs text-purple-700">Annual Projection</div>
                       </div>
                     </div>
@@ -758,12 +764,12 @@ export default function ROICalculator() {
                     Based on your <span className="font-semibold">{getIndustryName(chatState.industry)}</span> business sending{' '}
                     <span className="font-semibold">{chatState.emailsPerDay?.toLocaleString() || 0} emails per day</span> with{' '}
                     <span className="font-semibold">{chatState.sequences || 0} sequences</span> and a product price of{' '}
-                    <span className="font-semibold">${(chatState.productPrice || 0).toLocaleString()}</span>, you can expect approximately{' '}
+                    <span className="font-semibold">${fmt(Number.isFinite(Number(chatState.productPrice)) ? Number(chatState.productPrice) : 0)}</span>, you can expect approximately{' '}
                     <span className="font-semibold text-green-600">{report.positives.toLocaleString()} positive responses</span> per month. 
                     After deducting monthly costs of{' '}
-                    <span className="font-semibold text-red-600">${Math.round(report.totalMonthlyCost).toLocaleString()}</span>, your net monthly profit would be{' '}
-                    <span className="font-semibold text-green-600">${report.monthlyProfit.toLocaleString()}</span>, leading to an annual profit of{' '}
-                    <span className="font-semibold text-green-600">${report.annualProfit.toLocaleString()}</span>.
+                    <span className="font-semibold text-red-600">${fmt(Math.round(report.totalMonthlyCost))}</span>, your net monthly profit would be{' '}
+                    <span className="font-semibold text-green-600">${fmt(report.monthlyProfit)}</span>, leading to an annual profit of{' '}
+                    <span className="font-semibold text-green-600">${fmt(report.annualProfit)}</span>.
                   </p>
 
                   <div className="text-center mb-6">

@@ -5,11 +5,11 @@ import { verifyIdToken, isAdmin } from '@/lib/auth';
 // GET - Fetch single blog post by ID or slug
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const firestore = getFirestore();
-    const { id } = params;
+    const { id } = await params;
 
     // Try to get by ID first
     const docRef = firestore.collection(BLOG_POSTS_COLLECTION).doc(id);
@@ -46,7 +46,7 @@ export async function GET(
 // PUT - Update blog post (requires admin auth)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -65,7 +65,7 @@ export async function PUT(
     }
 
     const firestore = getFirestore();
-    const { id } = params;
+    const { id } = await params;
     const body: Partial<BlogPost> = await request.json();
 
     const docRef = firestore.collection(BLOG_POSTS_COLLECTION).doc(id);
@@ -106,7 +106,7 @@ export async function PUT(
 // DELETE - Delete blog post (requires admin auth)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -125,7 +125,7 @@ export async function DELETE(
     }
 
     const firestore = getFirestore();
-    const { id } = params;
+    const { id } = await params;
 
     const docRef = firestore.collection(BLOG_POSTS_COLLECTION).doc(id);
     const doc = await docRef.get();

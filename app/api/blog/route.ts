@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, BLOG_POSTS_COLLECTION, BlogPost, docToBlogPost } from '@/lib/firestore';
 import { verifyIdToken, isAdmin } from '@/lib/auth';
+import type { CollectionReference, Query } from '@google-cloud/firestore';
 
 // GET - Fetch all blog posts (public, no auth required)
 export async function GET(request: NextRequest) {
@@ -11,7 +12,7 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured') === 'true';
     const category = searchParams.get('category');
 
-    let query = firestore.collection(BLOG_POSTS_COLLECTION);
+    let query: CollectionReference | Query = firestore.collection(BLOG_POSTS_COLLECTION);
 
     if (publishedOnly) {
       query = query.where('published', '==', true);

@@ -2,7 +2,17 @@
 const nextConfig = {
   // Enable standalone output for Docker deployment
   output: 'standalone',
-  
+
+  async redirects() {
+    return [
+      {
+        source: '/integrations',
+        destination: '/best-ai-lead-gen-tools',
+        permanent: true, // 308 for SEO
+      },
+    ]
+  },
+
   images: {
     domains: [
       'images.unsplash.com', 

@@ -295,9 +295,10 @@ const ROICalculator = () => {
     
     await new Promise(resolve => setTimeout(resolve, 2000))
     
-    const emailsPerDay = parseInt(data.emailsPerDay) || 2000
-    const sequences = parseInt(data.sequences) || 3
-    const productPrice = parseFloat(data.productPrice) || 300
+    const emailsPerDay = parseInt(data.emailsPerDay, 10) || 2000
+    const sequences = parseInt(data.sequences, 10) || 3
+    const rawPrice = parseFloat(data.productPrice)
+    const productPrice = Number.isFinite(rawPrice) && rawPrice >= 0 ? rawPrice : 300
     
     // Days per week (default to 5 days per week)
     const daysPerWeek = 5
@@ -315,21 +316,16 @@ const ROICalculator = () => {
     const totalEmailsPerDay = emailsPerDay * sequences
     const domainsNeeded = Math.ceil(totalEmailsPerDay / 30)
     
-    // Domain cost: $10/domain/year (show separately as annual)
+    // Domain cost: $10/domain/year — one-time (annual), not included in monthly cost
     const domainCostYearly = domainsNeeded * 10
-    const domainCostMonthly = domainCostYearly / 12 // For monthly cost calculation only
-    
-    // VPS cost: $5/vps/month (1 VPS can handle 10 domains)
-    const vpsCount = Math.ceil(domainsNeeded / 10)
+
+    // VPS cost: $5/vps/month — 1 VPS per domain (domain count = VPS count). Matches tool page.
+    const vpsCount = domainsNeeded
     const vpsCost = vpsCount * 5
 
-    // Warming cost: Premium $19/domain/month OR Built-in (free)
-    // Note: This is simplified - in real calculator, user selects warming plan
-    const warmingCost = domainsNeeded * 19 // Assuming premium for now
-    
-    // Premium Mailboxes: $100/month (8 Gsuite and 25 Microsoft mailboxes)
-    // Note: This is simplified - in real calculator, user selects premium mailboxes
-    let apiCost = 0 // Default to no premium mailboxes
+    // Main page does not ask warming or premium — use 0 so total monthly is accurate
+    const warmingCost = 0
+    let apiCost = 0
 
     // Tool cost
     let toolCost = 0
@@ -347,8 +343,8 @@ const ROICalculator = () => {
       }
     }
 
-    // Total monthly cost (excluding one-time Mailwizz cost)
-    const totalMonthlyCost = vpsCost + warmingCost + apiCost + toolCost + configCost + domainCostMonthly
+    // Total monthly cost (domain is one-time annual, not included). Matches tool page logic.
+    const totalMonthlyCost = vpsCost + warmingCost + apiCost + toolCost + configCost
 
     // Industry-specific open rates (from provided table)
     const industryRates: Record<string, number> = {
@@ -373,16 +369,17 @@ const ROICalculator = () => {
     const positiveRate = sequences > 3 ? 0.11 : 0.05
     const positives = Math.round(replies * positiveRate)
     
-    // Revenue calculations
+    // Revenue calculations (guard against NaN)
     const monthlyRevenue = positives * productPrice
     const annualRevenue = monthlyRevenue * 12
     const monthlyProfit = monthlyRevenue - totalMonthlyCost
     const annualProfit = monthlyProfit * 12
-    const roiPercent = totalMonthlyCost > 0 ? ((monthlyProfit / totalMonthlyCost) * 100) : 0
-    
+    const roiNum = totalMonthlyCost > 0 ? (monthlyProfit / totalMonthlyCost) * 100 : 0
+    const roiPercent = Number.isFinite(roiNum) ? roiNum : 0
+
     setResults({
       domainsNeeded,
-      domainCost: domainCostYearly, // Show annual domain cost
+      domainCost: domainCostYearly, // One-time annual, not in monthly total
       vpsCost,
       warmingCost,
       apiCost,
@@ -394,10 +391,10 @@ const ROICalculator = () => {
       opens,
       replies,
       positives,
-      monthlyRevenue,
-      annualRevenue,
-      monthlyProfit,
-      annualProfit,
+      monthlyRevenue: Number.isFinite(monthlyRevenue) ? monthlyRevenue : 0,
+      annualRevenue: Number.isFinite(annualRevenue) ? annualRevenue : 0,
+      monthlyProfit: Number.isFinite(monthlyProfit) ? monthlyProfit : 0,
+      annualProfit: Number.isFinite(annualProfit) ? annualProfit : 0,
       roiPercent
     })
     
@@ -405,15 +402,17 @@ const ROICalculator = () => {
   }
 
   const formatCurrency = (amount: number) => {
+    const n = Number.isFinite(amount) ? amount : 0
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0
-    }).format(amount)
+    }).format(n)
   }
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US').format(num)
+    const n = Number.isFinite(num) ? num : 0
+    return new Intl.NumberFormat('en-US').format(n)
   }
 
   const resetCalculator = () => {
@@ -587,7 +586,7 @@ const ROICalculator = () => {
               <span className="text-sm font-medium text-purple-800">Return on Investment</span>
             </div>
             <div className="text-3xl font-bold text-purple-700">
-              {results.roiPercent.toFixed(1)}%
+              {Number.isFinite(results.roiPercent) ? results.roiPercent.toFixed(1) : '0'}%
             </div>
             <div className="text-sm text-purple-600">Monthly return</div>
           </div>
@@ -601,30 +600,38 @@ const ROICalculator = () => {
                 <div className="font-semibold">{results.domainsNeeded}</div>
               </div>
               <div>
-                <div className="text-gray-600">Domain Cost (Annual)</div>
+                <div className="text-gray-600">Domain (one-time cost)</div>
                 <div className="font-semibold">{formatCurrency(results.domainCost)}</div>
-                <div className="text-xs text-gray-500">({formatCurrency(results.domainCost / 12)}/month)</div>
+                <div className="text-xs text-gray-500">Annual, not in monthly</div>
               </div>
               <div>
                 <div className="text-gray-600">Management Cost</div>
                 <div className="font-semibold">{formatCurrency(results.configCost)}</div>
               </div>
               <div>
-                <div className="text-gray-600">VPS Cost</div>
-                <div className="font-semibold">{formatCurrency(results.vpsCost)}</div>
+                <div className="text-gray-600">VPS cost ($5/vps/month)</div>
+                <div className="font-semibold">{formatCurrency(results.vpsCost)}/month</div>
               </div>
               <div>
                 <div className="text-gray-600">Tool Cost</div>
                 <div className="font-semibold">{formatCurrency(results.toolCost)}</div>
               </div>
-              <div>
-                <div className="text-gray-600">Warming Cost</div>
-                <div className="font-semibold">{formatCurrency(results.warmingCost)}</div>
-              </div>
-              <div>
-                <div className="text-gray-600">API Cost</div>
-                <div className="font-semibold">{formatCurrency(results.apiCost)}</div>
-              </div>
+              {(results.warmingCost > 0 || results.apiCost > 0) && (
+                <>
+                  {results.warmingCost > 0 && (
+                    <div>
+                      <div className="text-gray-600">Warming Cost</div>
+                      <div className="font-semibold">{formatCurrency(results.warmingCost)}</div>
+                    </div>
+                  )}
+                  {results.apiCost > 0 && (
+                    <div>
+                      <div className="text-gray-600">API Cost</div>
+                      <div className="font-semibold">{formatCurrency(results.apiCost)}</div>
+                    </div>
+                  )}
+                </>
+              )}
               <div>
                 <div className="text-gray-600 font-semibold">Total Monthly Cost</div>
                 <div className="font-bold text-primary-600">{formatCurrency(results.totalMonthlyCost)}</div>

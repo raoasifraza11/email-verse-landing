@@ -7,7 +7,7 @@ const Footer = () => {
     product: [
       { name: 'Features', href: '/features' },
       { name: 'Pricing', href: '/pricing' },
-      { name: 'Integrations', href: '/integrations' },
+      { name: 'Best AI Lead Gen Tools', href: '/best-ai-lead-gen-tools' },
     ],
     company: [
       { name: 'About', href: '/about' },

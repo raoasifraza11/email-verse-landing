@@ -35,3 +35,4 @@ export async function isAdmin(uid: string): Promise<boolean> {
   return user.customClaims?.admin === true;
 }
 
+
