@@ -138,7 +138,7 @@ const FeaturesOverview = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="https://calendly.com/emailverse/consultation"
+              href="https://calendly.com/info-51729/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-primary-600 hover:bg-primary-50 hover:text-primary-700 font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 inline-block text-center"

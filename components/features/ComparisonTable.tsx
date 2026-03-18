@@ -139,7 +139,7 @@ const ComparisonTable = () => {
               Join hundreds of businesses that chose the most complete email marketing platform.
             </p>
             <a 
-              href="https://calendly.com/emailverse/consultation"
+              href="https://calendly.com/info-51729/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-block text-center"

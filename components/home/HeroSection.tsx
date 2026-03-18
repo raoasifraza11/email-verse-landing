@@ -144,7 +144,7 @@ const HeroSection = () => {
               <div className="space-y-6 max-w-4xl">
                 <div className="flex justify-start">
                   <a 
-                    href="https://calendly.com/emailverse/consultation"
+                    href="https://calendly.com/info-51729/30min"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-bold py-4 px-10 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-3 min-w-[200px] pulse-glow text-lg"

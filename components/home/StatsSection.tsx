@@ -229,7 +229,7 @@ const StatsSection = () => {
               Get powerful email tools plus expert services to maximize your success.
             </p>
             <a 
-              href="https://calendly.com/emailverse/consultation"
+              href="https://calendly.com/info-51729/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white hover:bg-primary-50 text-primary-700 hover:text-primary-800 font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg transform hover:-translate-y-1 inline-block text-center"

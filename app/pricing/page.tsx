@@ -184,7 +184,7 @@ export default function PricingPage() {
                   </div>
                   
                   <a 
-                    href="https://calendly.com/emailverse/consultation"
+                    href="https://calendly.com/info-51729/30min"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-300 inline-block text-center ${

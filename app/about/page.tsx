@@ -205,7 +205,7 @@ export default function AboutPage() {
               Stop juggling tools and start generating leads. Let our experts handle your entire email infrastructure while you focus on what matters most - growing your business.
             </p>
             <a
-              href="https://calendly.com/emailverse/consultation"
+              href="https://calendly.com/info-51729/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-600 text-white px-8 py-4 rounded-2xl font-semibold hover:bg-green-700 transition-colors inline-block"

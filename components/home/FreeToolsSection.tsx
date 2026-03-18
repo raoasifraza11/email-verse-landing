@@ -396,7 +396,7 @@ const FreeToolsSection = () => {
             <h4 className="text-xl font-semibold text-gray-900 mb-4">Ready to supercharge your email marketing?</h4>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="https://calendly.com/emailverse/consultation"
+                href="https://calendly.com/info-51729/30min"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 inline-block text-center"

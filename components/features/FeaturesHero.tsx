@@ -31,7 +31,7 @@ const FeaturesHero = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <a 
-              href="https://calendly.com/emailverse/consultation"
+              href="https://calendly.com/info-51729/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary inline-flex items-center"

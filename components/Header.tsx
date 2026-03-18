@@ -69,7 +69,7 @@ const Header = () => {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-6">
             <a 
-              href="https://calendly.com/emailverse/consultation"
+              href="https://calendly.com/info-51729/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2"
@@ -116,7 +116,7 @@ const Header = () => {
                 </div>
 
                 <a 
-                  href="https://calendly.com/emailverse/consultation"
+                  href="https://calendly.com/info-51729/30min"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-gradient-primary hover:shadow-lg hover:shadow-primary-500/25 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center space-x-2"
