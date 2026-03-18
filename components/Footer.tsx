@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Twitter, Linkedin, Github, Facebook } from 'lucide-react'
+import { Twitter, Linkedin, Facebook, Instagram, Youtube } from 'lucide-react'
 import EmailVerseLogo from './EmailVerseLogo'
 
 const Footer = () => {
@@ -27,10 +27,11 @@ const Footer = () => {
   }
 
   const socialLinks = [
-    { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'LinkedIn', icon: Linkedin, href: '#' },
-    { name: 'Facebook', icon: Facebook, href: '#' },
-    { name: 'GitHub', icon: Github, href: '#' },
+    { name: 'X', icon: Twitter, href: 'https://x.com/EmailVerse1' },
+    { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/in/khurram-khurshid-1a5b11196/' },
+    { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/emailverse1' },
+    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/email_verse/' },
+    { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/channel/UCzJ_e0hht_jFLz7G2iusjEg' },
   ]
 
   return (

@@ -260,7 +260,7 @@ export default function StatusPage() {
           <div className="mt-12 text-center">
             <p className="text-blue-100 mb-4">Follow us for real-time updates:</p>
             <div className="flex justify-center space-x-4">
-              <a href="#" className="text-blue-200 hover:text-white transition-colors">Twitter</a>
+              <a href="https://x.com/EmailVerse1" target="_blank" rel="noopener noreferrer" className="text-blue-200 hover:text-white transition-colors">X</a>
               <a href="#" className="text-blue-200 hover:text-white transition-colors">Status RSS</a>
               <a href="#" className="text-blue-200 hover:text-white transition-colors">Slack Integration</a>
             </div>
