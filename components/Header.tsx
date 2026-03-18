@@ -20,15 +20,7 @@ const Header = () => {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { 
-      name: 'Features', 
-      href: '/features',
-      dropdown: [
-        { name: 'Analytics', href: '/features#analytics', icon: Star },
-        { name: 'Templates', href: '/features#templates', icon: Mail },
-        { name: 'Integrations', href: '/features#integrations', icon: Shield }
-      ]
-    },
+    { name: 'Features', href: '/features' },
     { name: 'Blog', href: '/blog' },
     { name: 'Statistics', href: '/statistics' },
   ]
@@ -62,41 +54,13 @@ const Header = () => {
             <div className="flex items-center space-x-12">
               {navigation.map((item) => (
                 <div key={item.name} className="relative">
-                  {item.dropdown ? (
-                    <div
-                      className="relative"
-                      onMouseEnter={() => setShowDropdown(item.name)}
-                      onMouseLeave={() => setShowDropdown('')}
-                    >
-                      <button className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 font-semibold transition-colors duration-200 py-3 px-2">
-                        <span>{item.name}</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </button>
-                      
-                      {showDropdown === item.name && (
-                        <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50">
-                          {item.dropdown.map((dropItem) => (
-                            <Link
-                              key={dropItem.name}
-                              href={dropItem.href}
-                              className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200"
-                            >
-                              <dropItem.icon className="h-5 w-5 text-primary-500" />
-                              <span className="font-medium">{dropItem.name}</span>
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className="text-gray-700 hover:text-primary-600 font-semibold transition-colors duration-200 relative group py-3 px-2"
-                    >
-                      {item.name}
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-                    </Link>
-                  )}
+                  <Link
+                    href={item.href}
+                    className="text-gray-700 hover:text-primary-600 font-semibold transition-colors duration-200 relative group py-3 px-2"
+                  >
+                    {item.name}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -137,21 +101,6 @@ const Header = () => {
                   >
                     {item.name}
                   </Link>
-                  {item.dropdown && (
-                    <div className="ml-4 mt-2 space-y-2">
-                      {item.dropdown.map((dropItem) => (
-                        <Link
-                          key={dropItem.name}
-                          href={dropItem.href}
-                          className="flex items-center space-x-2 text-secondary-500 hover:text-primary-600 py-1 transition-colors duration-200"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <dropItem.icon className="h-4 w-4" />
-                          <span>{dropItem.name}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
               

@@ -170,13 +170,13 @@ export default function SubjectLineOptimizer() {
     
     // If 2 or more bad words, keep score low (5–8%)
     if (flaggedWords.length >= 2) {
-      score = Math.min(score, 5 + Math.random() * 3) // 5 to 8
+      score = Math.floor(Math.min(score, 5 + Math.random() * 3)) // 5 to 8
       spamScore = 100 - score
     }
 
-    // Ensure scores are within bounds
-    score = Math.max(0, Math.min(100, score))
-    spamScore = Math.max(0, Math.min(100, spamScore))
+    // Ensure scores are within bounds and always integers
+    score = Math.round(Math.max(0, Math.min(100, score)))
+    spamScore = Math.round(Math.max(0, Math.min(100, spamScore)))
     
     const openRatePrediction = Math.max(10, Math.min(45, score * 0.4 + Math.random() * 10))
     
