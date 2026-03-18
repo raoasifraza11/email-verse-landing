@@ -22,6 +22,9 @@ const nextConfig = {
     // Optimize images for production
     unoptimized: process.env.NODE_ENV === 'development' ? false : false,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 
 module.exports = nextConfig

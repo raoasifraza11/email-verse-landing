@@ -96,6 +96,66 @@ A modern, feature-rich email marketing platform built with Next.js 15, TypeScrip
 4. **Open in Browser**
    Navigate to `http://localhost:3000`
 
+### Testing the blog and admin locally (GCP-backed)
+
+You can run the full blog (posts, categories, settings, images) and admin panel against real GCP services from your machine.
+
+1. **Run the one-time local bootstrap script** (recommended):
+   ```bash
+   cd /Users/raoasifraza/code/clients/email-verse-landing
+   ADMIN_EMAIL=admin@example.com ./scripts/bootstrap-local.sh
+   ```
+   This will:
+   - Ensure `gcloud auth login` and `gcloud auth application-default login` are set up
+   - Enable required APIs on your current `gcloud` project
+   - Generate a `.env` file from your gcloud/Firebase config
+   - Grant the `admin` custom claim to the `ADMIN_EMAIL` user in Firebase Auth  
+     - If the user doesn’t exist, it will be **created for local use** with a default password `Admin12345!`  
+     - You can override this by setting `ADMIN_PASSWORD` before running the script
+
+   After it runs, open `.env` and, if needed, paste `NEXT_PUBLIC_FIREBASE_API_KEY` from Firebase Console.
+
+   **Or** do the steps manually:
+
+   1a. **Log in with gcloud and generate `.env`**:
+   ```bash
+   gcloud auth login
+   gcloud auth application-default login
+   gcloud config set project YOUR_PROJECT_ID   # if not already set
+   chmod +x scripts/generate-env.sh
+   ./scripts/generate-env.sh
+   ```
+   The script uses your current `gcloud` project and default GCS bucket name, and optionally pulls Firebase web config if you have `firebase-tools` and a web app in the project. Edit `.env` if needed (e.g. add `NEXT_PUBLIC_FIREBASE_API_KEY` from Firebase Console if the script couldn’t get it).
+
+   **Or** create `.env` manually: copy `.env.example` to `.env` and set:
+   - **GCP_PROJECT_ID** – your Google Cloud project ID
+   - **GCS_BUCKET_NAME** – Cloud Storage bucket for blog images (e.g. `your-project-id-blog-images`). Create the bucket in GCP Console if it doesn’t exist.
+   - **GOOGLE_APPLICATION_CREDENTIALS** – path to a [service account key JSON](https://console.cloud.google.com/iam-admin/serviceaccounts) (or leave unset and use `gcloud auth application-default login`)
+   - **NEXT_PUBLIC_FIREBASE_*** – from [Firebase Console → Project settings](https://console.firebase.google.com/project/_/settings/general): API Key, Auth domain, Project ID.
+
+2. **Enable APIs** in your GCP project (if not already):
+   ```bash
+   gcloud services enable firestore.googleapis.com storage.googleapis.com identitytoolkit.googleapis.com
+   ```
+
+3. **Create an admin user:**
+   - In [Firebase Console → Authentication](https://console.firebase.google.com/project/_/authentication/users), enable Email/Password and create a user (e.g. `admin@example.com`).
+   - Grant admin claim (from project root, with `GOOGLE_APPLICATION_CREDENTIALS` set):
+     ```bash
+     node scripts/set-admin.js admin@example.com
+     ```
+
+4. **Run the app:**
+   ```bash
+   npm run dev
+   ```
+   - **Blog (public):** http://localhost:3000/blog  
+   - **Admin:** http://localhost:3000/admin → log in with the Firebase user, then use **Posts**, **Categories**, and **Settings** (all stored in Firestore; images in GCS).
+
+5. **First-time setup in admin:** Open **Categories**, add categories (e.g. “AI & Automation”, “Best Practices”). Then create or edit posts and assign categories; uploads go to your GCS bucket.
+
+6. **Blog list 500 / missing index:** The first time you open `/blog`, the API may return 500 because Firestore needs a composite index. Either open the index-creation URL from the error in your terminal and click **Create index**, or run `firebase use <your-project-id>` then `make firestore-indexes` to deploy indexes from `firestore.indexes.json`.
+
 ## 📦 Project Structure
 
 ```
@@ -430,21 +490,22 @@ Now every push to `main` automatically deploys!
 
 ### 🌐 Custom Domain Setup
 
-#### Via gcloud CLI:
+To map a custom domain (e.g., `email-verse.com`), you can configure it directly via Terraform:
+1. Open `terraform/terraform.tfvars`.
+2. Set `custom_domain = "email-verse.com"`.
+3. Run `terraform apply`. 
 
-```bash
-gcloud run domain-mappings create \
-  --service emailverse-landing \
-  --domain www.yourdomain.com \
-  --region us-central1
-```
+The Terraform configuration automatically creates domain mappings for both the root domain (`email-verse.com`) and the **www** subdomain (`www.email-verse.com`).
 
-#### DNS Records to Add:
+#### DNS Records to Add
 
-| Type | Name | Value |
-|------|------|-------|
-| CNAME | www | ghs.googlehosted.com |
-| A | @ | (provided by GCP after mapping) |
+After applying, update your domain registrar's DNS settings with the records provided in the Terraform output. Typically, Cloud Run domain mappings require:
+
+| Type | Name/Host | Target/Value |
+|------|-----------|--------------|
+| A | @ | `216.239.32.21`, `216.239.34.21`, `216.239.36.21`, `216.239.38.21` |
+| AAAA | @ | `2001:4860:4802:32::15`, `2001:4860:4802:34::15`, `2001:4860:4802:36::15`, `2001:4860:4802:38::15` |
+| CNAME | www | `ghs.googlehosted.com.` |
 
 ---
 

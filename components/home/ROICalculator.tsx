@@ -325,7 +325,7 @@ const ROICalculator = () => {
 
     // Main page does not ask warming or premium — use 0 so total monthly is accurate
     const warmingCost = 0
-    let apiCost = 0
+    const apiCost = 0
 
     // Tool cost
     let toolCost = 0

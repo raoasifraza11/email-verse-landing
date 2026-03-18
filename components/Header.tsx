@@ -104,12 +104,6 @@ const Header = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link 
-              href="/login" 
-              className="text-gray-700 hover:text-primary-600 font-semibold transition-colors duration-200 px-4 py-2"
-            >
-              Sign In
-            </Link>
             <a 
               href="https://calendly.com/emailverse/consultation"
               target="_blank"
@@ -171,14 +165,7 @@ const Header = () => {
                     </div>
                   ))}
                 </div>
-                
-                <Link 
-                  href="/login" 
-                  className="block text-secondary-600 hover:text-primary-600 font-medium mb-3 transition-colors duration-200"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
+
                 <a 
                   href="https://calendly.com/emailverse/consultation"
                   target="_blank"

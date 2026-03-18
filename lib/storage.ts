@@ -34,10 +34,7 @@ export async function uploadFile(
     },
   });
 
-  // Make file publicly readable
-  await fileRef.makePublic();
-
-  // Return public URL
+  // Return public URL (visibility is controlled by bucket IAM / uniform access)
   return `https://storage.googleapis.com/${getBucketName()}/${fileName}`;
 }
 

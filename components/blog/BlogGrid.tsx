@@ -1,26 +1,46 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Clock, User, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { BlogPost } from '@/lib/firestore';
 
+interface CategoryOption {
+  name: string;
+  slug: string;
+}
+
 const BlogGrid = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams.get('category') || '';
+
+  const POSTS_PER_PAGE = 6;
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
 
   useEffect(() => {
+    fetch('/api/blog/categories')
+      .then((r) => (r.ok ? r.json() : { categories: [] }))
+      .then((data) => setCategories(data.categories || []))
+      .catch(() => setCategories([]));
+  }, []);
+
+  useEffect(() => {
+    setVisibleCount(POSTS_PER_PAGE);
     fetchPosts();
-  }, [selectedCategory]);
+  }, [categoryFromUrl]);
 
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const url = selectedCategory 
-        ? `/api/blog?published=true&category=${encodeURIComponent(selectedCategory)}`
+      const url = categoryFromUrl
+        ? `/api/blog?published=true&category=${encodeURIComponent(categoryFromUrl)}`
         : '/api/blog?published=true';
-      
+
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
@@ -42,7 +62,7 @@ const BlogGrid = () => {
     }
   };
 
-  if (loading) {
+  if (loading && posts.length === 0) {
     return (
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
@@ -55,6 +75,8 @@ const BlogGrid = () => {
     );
   }
 
+  const visiblePosts = posts.slice(0, visibleCount);
+
   return (
     <section className="section-padding bg-white">
       <div className="max-w-7xl mx-auto">
@@ -62,19 +84,21 @@ const BlogGrid = () => {
         <div className="flex items-center justify-between mb-12">
           <h2 className="text-2xl font-bold text-gray-900">Latest Articles</h2>
           <div className="flex items-center space-x-4">
-            <select 
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            <select
+              value={categoryFromUrl}
+              onChange={(e) => {
+                const v = e.target.value;
+                const params = new URLSearchParams(searchParams.toString());
+                if (v) params.set('category', v);
+                else params.delete('category');
+                router.push(`/blog${params.toString() ? `?${params.toString()}` : ''}`);
+              }}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
             >
               <option value="">All Categories</option>
-              <option value="AI & Automation">AI & Automation</option>
-              <option value="Analytics">Analytics</option>
-              <option value="Best Practices">Best Practices</option>
-              <option value="Deliverability">Deliverability</option>
-              <option value="Industry Trends">Industry Trends</option>
-              <option value="Segmentation">Segmentation</option>
-              <option value="Templates">Templates</option>
+              {categories.map((cat) => (
+                <option key={cat.slug} value={cat.name}>{cat.name}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -85,63 +109,77 @@ const BlogGrid = () => {
             <p className="text-gray-600">No blog posts found.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <article key={post.id} className="card overflow-hidden group hover:shadow-xl transition-all duration-300">
-                <div className="relative">
-                  <img
-                    src={post.imageUrl || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop'}
-                    alt={post.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {post.featured && (
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        Featured
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {visiblePosts.map((post) => (
+                <article key={post.id} className="card overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col h-full bg-white border border-gray-100 rounded-2xl">
+                  <div className="relative">
+                    <img
+                      src={post.imageUrl || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop'}
+                      alt={post.title}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    {post.featured && (
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-primary-600 shadow-sm text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                          Featured
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-white/90 shadow-sm backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                        {post.category}
                       </span>
                     </div>
-                  )}
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-white/90 text-gray-700 px-2 py-1 rounded text-xs font-medium">
-                      {post.category}
-                    </span>
                   </div>
-                </div>
-                
-                <div className="p-6">
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                    <div className="flex items-center space-x-1">
-                      <User className="h-4 w-4" />
-                      <span>{post.author}</span>
+
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
+                      <div className="flex items-center space-x-1.5 font-medium">
+                        <User className="h-4 w-4 text-gray-400" />
+                        <span>{post.author}</span>
+                      </div>
+                      <div className="flex items-center space-x-1.5 font-medium">
+                        <Clock className="h-4 w-4 text-gray-400" />
+                        <span>{post.readTime}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{post.readTime}</span>
+
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors duration-200 line-clamp-2">
+                      {post.title}
+                    </h3>
+
+                    <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                      {post.excerpt}
+                    </p>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                      <span className="text-sm font-medium text-gray-400">{formatDate(post.date)}</span>
+                      <Link
+                        href={`/blog/${post.slug || post.id}`}
+                        className="text-primary-600 hover:text-primary-700 font-bold text-sm flex items-center space-x-1 group/link"
+                      >
+                        <span>Read More</span>
+                        <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
                   </div>
-                  
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">{formatDate(post.date)}</span>
-                    <Link 
-                      href={`/blog/${post.slug || post.id}`}
-                      className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center space-x-1"
-                    >
-                      <span>Read More</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                </article>
+              ))}
+            </div>
+
+            {/* Load More Button */}
+            {posts.length > visibleCount && (
+              <div className="mt-16 text-center">
+                <button
+                  onClick={() => setVisibleCount((prev) => prev + POSTS_PER_PAGE)}
+                  className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-gray-700 bg-white border-2 border-gray-200 rounded-full hover:border-primary-600 hover:text-primary-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                >
+                  Load More Articles
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>

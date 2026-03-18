@@ -50,7 +50,7 @@ export default function SpamCheckerPage() {
       return "\\$"
     } else {
       // Escape special regex characters and handle multi-word phrases
-      let escaped = item.term.split(/\s+/).map(word => 
+      const escaped = item.term.split(/\s+/).map(word => 
         word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       ).join("[\\s\\-]+")
       // Use word boundaries - they work at word/non-word boundaries

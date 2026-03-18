@@ -62,15 +62,25 @@ echo -e "${YELLOW}🔐 Step 3: Authenticating with Google Cloud...${NC}"
 gcloud auth configure-docker ${REGION:-us-central1}-docker.pkg.dev
 echo -e "${GREEN}✅ Authenticated${NC}\n"
 
-# Step 4: Set up buildx for multi-platform builds
-echo -e "${YELLOW}🔧 Step 4: Setting up Docker buildx...${NC}"
+# Step 4: Ensure Artifact Registry repository exists (via Terraform target apply)
+echo -e "${YELLOW}🏗️  Step 4: Ensuring Artifact Registry repository exists...${NC}"
+cd terraform
+if [ ! -d ".terraform" ]; then
+    terraform init
+fi
+terraform apply -auto-approve -target=google_artifact_registry_repository.emailverse
+cd ..
+echo -e "${GREEN}✅ Artifact Registry repository ready${NC}\n"
+
+# Step 5: Set up buildx for multi-platform builds
+echo -e "${YELLOW}🔧 Step 5: Setting up Docker buildx...${NC}"
 docker buildx create --use --name multiplatform-builder 2>/dev/null || docker buildx use multiplatform-builder 2>/dev/null || true
 docker buildx inspect --bootstrap 2>/dev/null || true
 echo -e "${GREEN}✅ Buildx ready${NC}\n"
 
-# Step 5: Build and push directly to Artifact Registry (ensures amd64 only)
+# Step 6: Build and push directly to Artifact Registry (ensures amd64 only)
 ARTIFACT_REGISTRY_URL="${REGION:-us-central1}-docker.pkg.dev/${PROJECT_ID}/emailverse-repo"
-echo -e "${YELLOW}🔨 Step 5: Building and pushing image to Artifact Registry...${NC}"
+echo -e "${YELLOW}🔨 Step 6: Building and pushing image to Artifact Registry...${NC}"
 docker buildx build --platform linux/amd64 --push -t ${ARTIFACT_REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG} .
 echo -e "${GREEN}✅ Image built and pushed${NC}\n"
 

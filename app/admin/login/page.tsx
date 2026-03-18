@@ -70,7 +70,17 @@ export default function AdminLoginPage() {
       router.push('/admin');
     } catch (err: any) {
       console.error('Login error:', err);
-      setError(err.message || 'Failed to login. Please check your credentials.');
+      const code = err?.code || '';
+      const msg = err?.message || '';
+      if (code === 'auth/configuration-not-found' || msg.includes('configuration-not-found')) {
+        setError(
+          'Firebase Authentication is not enabled for this project. ' +
+          'Run: make firebase-env (it enables Email/Password via API). ' +
+          'Or in Firebase Console → Authentication → Get started → enable Email/Password.'
+        );
+      } else {
+        setError(msg || 'Failed to login. Please check your credentials.');
+      }
     } finally {
       setLoading(false);
     }

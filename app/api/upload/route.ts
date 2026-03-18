@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyIdToken, isAdmin } from '@/lib/auth';
 import { uploadFile, generateFileName } from '@/lib/storage';
+import { getBlogSettings, DEFAULT_BLOG_SETTINGS } from '@/lib/firestore';
 
-// POST - Upload image file
+// POST - Upload image file (uses blog settings from GCP for allowed types/size)
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication
@@ -27,8 +28,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+    // Use blog settings from GCP (constants)
+    let allowedTypes: string[];
+    let maxSize: number;
+    try {
+      const settings = await getBlogSettings();
+      allowedTypes = (settings.allowedImageTypes as string[]) ?? DEFAULT_BLOG_SETTINGS.allowedImageTypes!;
+      maxSize = (settings.maxImageSizeBytes as number) ?? DEFAULT_BLOG_SETTINGS.maxImageSizeBytes!;
+    } catch {
+      allowedTypes = DEFAULT_BLOG_SETTINGS.allowedImageTypes!;
+      maxSize = DEFAULT_BLOG_SETTINGS.maxImageSizeBytes!;
+    }
+
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
         { error: 'Invalid file type. Only images are allowed.' },
@@ -36,11 +47,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: 'File size exceeds 5MB limit' },
+        { error: `File size exceeds ${Math.round(maxSize / 1024 / 1024)}MB limit` },
         { status: 400 }
       );
     }

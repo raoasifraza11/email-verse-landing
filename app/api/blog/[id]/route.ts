@@ -57,7 +57,7 @@ export async function PUT(
 
     const idToken = authHeader.substring(7);
     const decodedToken = await verifyIdToken(idToken);
-    
+
     // Check if user is admin
     const userIsAdmin = await isAdmin(decodedToken.uid);
     if (!userIsAdmin) {
@@ -73,6 +73,26 @@ export async function PUT(
 
     if (!doc.exists) {
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+    }
+
+    const postData = doc.data() as BlogPost;
+
+    // Delete old image if it was replaced or removed
+    if (
+      body.imageUrl !== undefined &&
+      postData.imageUrl &&
+      body.imageUrl !== postData.imageUrl &&
+      postData.imageUrl.includes('storage.googleapis.com')
+    ) {
+      try {
+        const { deleteFile } = await import('@/lib/storage');
+        const urlParts = postData.imageUrl.split('/');
+        // Ensure we handle URL parts properly, getting everything after 'emailverse-blog-images/'
+        const fileName = urlParts.slice(-2).join('/');
+        await deleteFile(fileName);
+      } catch (error) {
+        console.error('Error deleting old image during update:', error);
+      }
     }
 
     // Update slug if title changed
@@ -117,7 +137,7 @@ export async function DELETE(
 
     const idToken = authHeader.substring(7);
     const decodedToken = await verifyIdToken(idToken);
-    
+
     // Check if user is admin
     const userIsAdmin = await isAdmin(decodedToken.uid);
     if (!userIsAdmin) {

@@ -108,7 +108,7 @@ resource "google_cloud_run_v2_service" "emailverse" {
       }
       env {
         name  = "GCS_BUCKET_NAME"
-        value = google_storage_bucket.blog_images.name
+        value = "${var.project_id}-blog-images"
       }
       env {
         name  = "NEXT_PUBLIC_FIREBASE_PROJECT_ID"
@@ -137,8 +137,6 @@ resource "google_cloud_run_v2_service" "emailverse" {
   depends_on = [
     google_project_service.required_apis,
     google_artifact_registry_repository.emailverse,
-    google_firestore_database.default,
-    google_storage_bucket.blog_images,
     google_service_account.emailverse_service,
   ]
 }
@@ -158,6 +156,7 @@ resource "google_cloud_run_v2_service_iam_member" "public_access" {
 # Firestore Database (Native mode - cost-effective)
 # -----------------------------------------------------------------------------
 resource "google_firestore_database" "default" {
+  count       = 0
   project     = var.project_id
   name        = "(default)"
   location_id = var.region
@@ -170,6 +169,7 @@ resource "google_firestore_database" "default" {
 # Cloud Storage Bucket for Blog Images
 # -----------------------------------------------------------------------------
 resource "google_storage_bucket" "blog_images" {
+  count         = 0
   name          = "${var.project_id}-blog-images"
   location      = var.region
   force_destroy = false
@@ -199,7 +199,7 @@ resource "google_storage_bucket" "blog_images" {
 
 # Make bucket publicly readable for images
 resource "google_storage_bucket_iam_member" "public_read" {
-  bucket = google_storage_bucket.blog_images.name
+  bucket = "${var.project_id}-blog-images"
   role   = "roles/storage.objectViewer"
   member = "allUsers"
 }
@@ -225,6 +225,19 @@ resource "google_project_iam_member" "storage_admin" {
   member  = "serviceAccount:${google_service_account.emailverse_service.email}"
 }
 
+# Required for Cloud Run to call Firebase Auth / Identity Toolkit (token verification)
+resource "google_project_iam_member" "service_usage_consumer" {
+  project = var.project_id
+  role    = "roles/serviceusage.serviceUsageConsumer"
+  member  = "serviceAccount:${google_service_account.emailverse_service.email}"
+}
+
+# Firebase Admin SDK: verify tokens and read user/claims (getUser, verifyIdToken)
+resource "google_project_iam_member" "identity_platform_viewer" {
+  project = var.project_id
+  role    = "roles/identityplatform.viewer"
+  member  = "serviceAccount:${google_service_account.emailverse_service.email}"
+}
 
 # -----------------------------------------------------------------------------
 # Identity Platform (Firebase Auth) Configuration
@@ -232,6 +245,7 @@ resource "google_project_iam_member" "storage_admin" {
 # or via gcloud, then set as environment variable
 # -----------------------------------------------------------------------------
 resource "google_identity_platform_config" "default" {
+  count   = 0
   project = var.project_id
 
   sign_in {
@@ -257,6 +271,22 @@ resource "google_cloud_run_domain_mapping" "custom_domain" {
   count    = var.custom_domain != "" ? 1 : 0
   location = var.region
   name     = var.custom_domain
+
+  metadata {
+    namespace = var.project_id
+  }
+
+  spec {
+    route_name = google_cloud_run_v2_service.emailverse.name
+  }
+
+  depends_on = [google_cloud_run_v2_service.emailverse]
+}
+
+resource "google_cloud_run_domain_mapping" "www_domain" {
+  count    = var.custom_domain != "" ? 1 : 0
+  location = var.region
+  name     = "www.${var.custom_domain}"
 
   metadata {
     namespace = var.project_id

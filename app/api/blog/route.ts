@@ -26,10 +26,25 @@ export async function GET(request: NextRequest) {
       query = query.where('category', '==', category);
     }
 
-    // Order by date descending
-    query = query.orderBy('date', 'desc');
-
-    const snapshot = await query.get();
+    // Prefer ordering by date descending, but gracefully handle missing composite index
+    let snapshot;
+    try {
+      const orderedQuery = (query as Query).orderBy('date', 'desc');
+      snapshot = await orderedQuery.get();
+    } catch (error: any) {
+      if (
+        error?.code === 9 &&
+        (error?.details || error?.message || '').includes('The query requires an index')
+      ) {
+        console.warn(
+          'Firestore composite index missing for blogPosts query; falling back without orderBy. ' +
+            'Create the index from the Firestore error link or run `make firestore-indexes`.'
+        );
+        snapshot = await query.get();
+      } else {
+        throw error;
+      }
+    }
     const posts = snapshot.docs.map(docToBlogPost);
 
     return NextResponse.json({ posts }, { status: 200 });
